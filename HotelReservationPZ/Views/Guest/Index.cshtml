@@ -1,0 +1,68 @@
+﻿@model HotelReservation.Core.ViewModels.GuestReservationViewModel
+
+<div class="container mt-5 ">
+    <dl class="row mt-5">
+        <dt class="col-sm-3">Nazwa hotelu</dt>
+        <dd class="col-sm-9">
+            <a asp-controller="Rooms" asp-action="Index" asp-route-hotel="@Model.HoteId">
+                @Html.DisplayFor(x => x.HotelName)
+            </a>
+        </dd>
+
+        <dt class="col-sm-3">Zameldowanie</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.Check_in_date) o godzinie : @Html.DisplayFor(x => x.Check_in_time)</p>
+        </dd>
+
+        <dt class="col-sm-3">Wymeldownaie</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.Check_out_date) o godzinie : @Html.DisplayFor(x => x.Check_out_time)</p>
+        </dd>
+
+        <dt class="col-sm-3">Cena</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.TotalPrice) zł</p>
+        </dd>
+
+        <dt class="col-sm-3">Ilość pokoi</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.CountOfRoom)</p>
+        </dd>
+        <dt class="col-sm-3">Ilość dorosłych</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.CountOfAdults)</p>
+        </dd>
+        <dt class="col-sm-3">Ilość dzieci</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.CountOfChildren)</p>
+        </dd>
+
+        <dt class="col-sm-3">Gość </dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.FirstName) @Html.DisplayFor(x => x.FirstName)</p>
+        </dd>
+
+        <dt class="col-sm-3">Email </dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.Email) </p>
+        </dd>
+
+        <dt class="col-sm-3">Telefon </dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.Phone) </p>
+        </dd>
+
+        <dt class="col-sm-3 text-truncate">Adress</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.Street) @Html.DisplayFor(x => x.StreetNumber)</p>
+            <p>@Html.DisplayFor(x => x.City) @Html.DisplayFor(x => x.ZipCode)</p>
+            <p>@Html.DisplayFor(x => x.Country)</p>
+        </dd>
+        <dt class="col-sm-3">Informacje dodatkowe</dt>
+        <dd class="col-sm-9">
+            <p>@Html.DisplayFor(x => x.AdditionalInfo) </p>
+        </dd>
+    </dl>
+</div>
+       
+

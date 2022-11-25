@@ -1,0 +1,233 @@
+﻿@model HotelReservation.Core.ViewModels.ReservationFormViewModel
+
+<div class="container-fluid mt-5">
+    <div class="col-md-12">
+        <section class="row">
+            <div class="col-md-6">
+                <div class="pro-img-details m1">
+                    <img src="~/Images/Room/07fe70f1-032f-4f4d-b183-552a4d1f311d.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="pro-img-list m-1 w-100">
+                    <div class="form-row h-100 w-100 flex-fill">
+                        <div class="col-3 h-100 w-100">
+                            <img src="~/Images/Room/561cd493-3ff8-4fed-9608-7d5f142a70cf.jpg" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-3 h-100">
+                            <a href="#">
+                                <img src="~/Images/Room/74420977-066f-4b2d-8bb5-a5faedd7bc6a.jpg" alt="" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-3 h-100">
+                            <a href="#">
+                                <img src="~/Images/Room/b5c3246b-3e19-45de-bdc8-5151ad61163c.jpg" alt="" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-3 h-100">
+                            <a href="#">
+                                <img src="~/Images/Room/07fe70f1-032f-4f4d-b183-552a4d1f311d.jpg" alt="" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row flex-row justify-content-center">
+                    <div class="col-12 form-header mt-3 flex-column justify-content-center">
+                        <h1 class="text-center">Rezerwacja</h1>
+                    </div>
+                    <form asp-controller="Rooms" asp-action="Reservation" class="mt-3">
+                        <input type="hidden" asp-for="RoomId" value=@ViewBag.RoomId />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="StartDate" id="startDate" class="form-control" required>
+                                    <label class="control-label">Zameldowanie</label>
+                                    <label asp-validation-for="StartDate" class="text-danger"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="EndDate" id="endDate" class="form-control" required>
+                                    <label class="control-label">Wymeldowanie</label>
+                                    <label asp-validation-for="EndDate" class="text-danger"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select asp-for="CountOfRoom" 
+                                            class="form-control" 
+                                            id="CountOfRoomDropDownList"
+                                            asp-items="ViewBag.CountOfRooms"
+                                            ></select>
+                                    <span class="select-arrow"></span>
+                                    <span class="form-label">Pokoje</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select asp-for="CountOfAdults" 
+                                            id="CountOfAdultsDropDownList"
+                                            class="form-control" 
+                                            asp-items="ViewBag.CountOfAdults_list"></select>
+                                    <span class="select-arrow"></span>
+                                    <span class="form-label">Dorośli</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select asp-for="CountOfChildren" 
+                                            id="CountOfChildrenDropDownList"
+                                            class="form-control" 
+                                            asp-items="ViewBag.CountOfChildrens"></select>
+                                    <span class="select-arrow"></span>
+                                    <span class="form-label">Dzieci</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="FirstName" class="form-control" required>
+                                    <label class="control-label">Imię</label>
+                                    <label asp-validation-for="FirstName" class="text-danger"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="LastName" class="form-control" required>
+                                    <label class="control-label">Nazwisko</label>
+                                    <label asp-validation-for="LastName" class="text-danger"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input asp-for="Country" class="form-control" required>
+                                    <label class="control-label">Kraj</label>
+                                    <label asp-validation-for="Country" class="text-danger"></label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <input asp-for="Street" class="form-control" required>
+                                    <label class="control-label">Ulica</label>
+                                    <label asp-validation-for="Street" class="text-danger"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <input asp-for="StreetNumber" class="form-control" required>
+                                    <label class="control-label">Nr. Ulicy</label>
+                                    <label asp-validation-for="StreetNumber" class="text-danger"></label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <input asp-for="City" class="form-control" required>
+                                    <label class="control-label">Miejscowość</label>
+                                    <label asp-validation-for="City" class="text-danger"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input asp-for="ZipCode" class="form-control" required>
+                                    <label class="control-label">Kod</label>
+                                    <label asp-validation-for="ZipCode" class="text-danger"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="Email" class="form-control" required>
+                                    <label class="control-label">Email</label>
+                                    <label asp-validation-for="Email" class="text-danger"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input asp-for="Phone" class="form-control" required>
+                                    <label class="control-label">Telefon</label>
+                                    <label asp-validation-for="Phone" class="text-danger"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 m-2">
+                                <span class="font-weight-bold">Cena : </span>
+                                <span id="htmlPrice">
+                                    @Html.ViewBag.Price
+                                </span>
+                                <span>zł</span>
+                            </div>
+
+                        </div>
+
+                        <div class="form-btn">
+                            <input type="submit" id="SubmitButton" value="Zatwierdź" class="btn btn-round bg-dark text-light" />
+                        </div>
+                    </form>
+
+                    <script type="text/javascript">
+                        var price = @Html.ViewBag.Price;
+
+                        var roomDD = $('#CountOfRoomDropDownList');
+                        var htmlPrice = $('#htmlPrice');
+                        var submtbutton = $('#SubmitButton');
+                        var startDate = $('#startDate');
+                        var endDate = $('#endDate');
+
+                        roomDD.change(function() {
+                            setPrice();
+                        });
+
+                        function setPrice() {
+                            var rooms = roomDD.find(":selected").val();
+                            var val = price * rooms ;
+
+                            val = val * getDays();
+
+                            htmlPrice.text(val);
+                            if (val == 0) {
+                                console.log("TAK");
+                                submtbutton.prop('disabled', true);
+                            } else {
+                                console.log("NIe");
+                                submtbutton.prop('disabled', false);
+                            }
+
+                        }
+
+                        function getDays() {
+                            var date1 = new Date(startDate.val());
+                            var date2 = new Date(endDate.val());
+                            var milli_secs = date1.getTime() - date2.getTime();
+                            // Convert the milli seconds to Days 
+                            var days = milli_secs / (1000 * 3600 * 24);
+                            return  Math.round(Math.abs(days));
+                        }
+
+                    </script>
+
+                </div> 
+   
+            </div>
+        </section>
+    </div>
+</div>

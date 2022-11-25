@@ -1,0 +1,63 @@
+﻿@model HotelReservation.Models.Room
+
+<div class="container-fluid mt-5">
+    <div class="col-md-12">
+        <section class="row">
+            <div class="col-md-6">
+                <div class="pro-img-details m1">
+                    <img src="~/Images/Room/07fe70f1-032f-4f4d-b183-552a4d1f311d.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="pro-img-list m-1 w-100">
+                    <div class="form-row h-100 w-100 flex-fill">
+                        <div class="col-3 h-100 w-100">
+                            <img src="~/Images/Room/561cd493-3ff8-4fed-9608-7d5f142a70cf.jpg" alt="" class="img-fluid">
+                        </div>
+                        <div class="col-3 h-100">
+                            <a href="#">
+                                <img src="~/Images/Room/74420977-066f-4b2d-8bb5-a5faedd7bc6a.jpg" alt="" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-3 h-100">
+                            <a href="#">
+                                <img src="~/Images/Room/b5c3246b-3e19-45de-bdc8-5151ad61163c.jpg" alt="" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="col-3 h-100">
+                            <a href="#">
+                                <img src="~/Images/Room/07fe70f1-032f-4f4d-b183-552a4d1f311d.jpg" alt="" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4 class="pro-d-title">
+                    <h2 class="">
+                        @Html.DisplayFor(x => x.Name)
+                    </h2>
+                </h4>
+                <p>
+                    @Html.DisplayFor(x => x.Description)
+                </p>
+                <div class="product_meta">
+                    <span class="posted_in">
+                        <strong>Typ pokoju:</strong>
+                        <a rel="tag" href="#">@Html.DisplayFor(x => x.Type.Name)</a>
+                    </span>
+                </div>
+                <div class="m-bot15">
+                    <strong>Cena : </strong>
+                    <span class="amount-old">@Html.DisplayFor(x => x.Price) zł</span>
+                    <span class="pro-price">@Html.DisplayFor(x => x.Price) zł</span>
+                </div>
+
+                <a asp-action="Reservation" asp-route-id=@Model.Id>
+                    <button class="btn btn-round bg-dark text-light" type="button">
+                        Rezerwacja
+                    </button>
+                </a>
+            </div>
+
+        </section>
+    </div>
+</div>

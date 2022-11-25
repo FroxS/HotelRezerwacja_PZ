@@ -1,0 +1,96 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+:root{
+    --fontLight: #fff;
+}
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+img{
+    object-fit:fill;
+}
+
+a.nav-link.text-white:hover{
+    font-weight: bold;
+}
+
+.slider-card{
+    position: relative;
+    width: 100%;
+    height:100%;
+}
+
+.hotel-card-info {
+    position: absolute;
+    display:flex;
+    align-items: center;
+    right: 15%;
+    top: 30%;
+    left: 15%;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: var(--fontLight);
+    text-align: center;
+}
+
+.hotel_card_banner{
+    height: 50vh!important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+.hotel-card-info p {
+    font-size: 24px;
+}
+
+.hotel-card-info h5 {
+    font-size: 50px;
+}
+
+.hotel-card-info a{
+    color: var(--fontLight);
+    
+}
+
+.hotel-card-info{
+
+}
+
+.shotel-card img {
+    object-fit: cover;
+}
+
+.separator{
+    width: 100vw;
+    height: 100px;
+}
+
+
+
+
+body {
+    background-image: linear-gradient(to right, #7B1FA2, #E91E63)
+}
+
+.section {
+    position: relative;
+    height: 100vh
+}
+
+.section .section-center {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
