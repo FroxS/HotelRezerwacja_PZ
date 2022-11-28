@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelReservation.Core", "Ho
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelReservation", "HotelReservationPZ\HotelReservation.csproj", "{F51FB08B-A98B-408A-99FB-8B6EF9E56395}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservation.Models", "HotelReservation.Models\HotelReservation.Models.csproj", "{C440DCDB-93FD-4B73-B2AC-233369F33F85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelReservation.Models", "HotelReservation.Models\HotelReservation.Models.csproj", "{C440DCDB-93FD-4B73-B2AC-233369F33F85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D184430-B8A9-4FC0-88B4-C62B5E498A5A}"
+	ProjectSection(SolutionItems) = preProject
+		dane.sql = dane.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

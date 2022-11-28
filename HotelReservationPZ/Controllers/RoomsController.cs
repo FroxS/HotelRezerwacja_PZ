@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HotelReservation.EF;
 using HotelReservation.Models;
 using Microsoft.AspNetCore.Hosting;
 using HotelReservation.Core.ViewModels;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using HotelReservation.Core.Service;
 using HotelReservation.Core.Exeptions;
 
@@ -18,28 +14,74 @@ namespace HotelReservation.Controllers
 {
     public class RoomsController : Controller
     {
-        private readonly HotelDBContext _context;
-        private readonly IRoomService _service;
+        #region Private Properties
+
+        /// <summary>
+        /// Service for rooms
+        /// </summary>
+        private readonly IRoomService _roomService;
+
+        /// <summary>
+        /// Service for hotel
+        /// </summary>
         private readonly IHotelService _hotelservice;
+
+        /// <summary>
+        /// Service for reservation
+        /// </summary>
         private readonly IReservationService _reservationService;
+
+        /// <summary>
+        /// Service for room type
+        /// </summary>
+        private readonly IRoomTypeService _roomTypeService;
+
+        /// <summary>
+        /// Host environment
+        /// </summary>
         private readonly IWebHostEnvironment _hostEnvironment;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="roomService">Service for rooms</param>
+        /// <param name="hotelservice">Service for hotel</param>
+        /// <param name="hostEnvironment">Host environment</param>
+        /// <param name="reservationService">Service for reservation</param>
         public RoomsController(
-            HotelDBContext context,
-            IRoomService service,
+            IRoomService roomService,
             IHotelService hotelservice,
             IWebHostEnvironment hostEnvironment,
-            IReservationService reservationService)
+            IReservationService reservationService,
+            IRoomTypeService roomTypeService)
         {
-            _context = context;
-            _service = service;
+            _roomService = roomService;
             _hotelservice = hotelservice;
             _hostEnvironment = hostEnvironment;
             _reservationService = reservationService;
+            _roomTypeService = roomTypeService;
+
+
         }
 
-        // GET: Rooms
-        public IActionResult Index(Guid hotel, DateTime? check_in, DateTime? check_out, string name)
+        #endregion
+
+        #region Controler actions
+
+        /// <summary>
+        /// Default action for this controller
+        /// GET: Rooms
+        /// </summary>
+        /// <param name="hotel">Id of hotel</param>
+        /// <param name="check_in">Optinal date of check in</param>
+        /// <param name="check_out">Optinal date of check out</param>
+        /// <param name="name">Optinal search name</param>
+        /// <returns></returns>
+        public async Task<IActionResult> Index(Guid hotel, DateTime? check_in, DateTime? check_out, string name)
         {
             ViewData["HotelID"] = hotel;
             ViewData["check_in"] = check_in?.ToString("yyyy-MM-dd") ?? null;
@@ -47,148 +89,247 @@ namespace HotelReservation.Controllers
             ViewData["name"] = name; 
             if (hotel != Guid.Empty)
             {
-                ViewData["Hotel"] = _hotelservice.GetVM(hotel);
+                ViewData["Hotel"] = await _hotelservice.GetVMAsync(hotel);
             }
 
             if(check_in != null && check_out != null)
                 if(check_in.Value < check_out.Value)
-                    return View(_service.GetList(hotel, name, check_in.Value, check_out.Value));
+                    return View(await _roomService.GetListAsync(hotel, name, check_in.Value, check_out.Value));
             
             
-            return View(_service.GetList(hotel, name));
+            return View( await _roomService.GetListAsync(hotel, name));
         }
 
-        // GET: Rooms/Details/5
+        /// <summary>
+        /// Action for room details
+        /// GET: Rooms/Details/5
+        /// </summary>
+        /// <param name="id">Id of room</param>
+        /// <returns></returns>
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
+            try
+            {
+                if (id == null) return NotFound();
+
+                return View(await _roomService.GetAsync(id.Value));
+            }
+            catch
             {
                 return NotFound();
             }
-
-            var room = await _context.Rooms
-                .Include(r => r.Hotlel)
-                .Include(r => r.Type)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            return View(room);
         }
 
-        // GET: Rooms/Create
-        public IActionResult Create(Guid hotel)
+        /// <summary>
+        /// Action for create new room
+        ///  GET: Rooms/Create
+        /// </summary>
+        /// <param name="hotel">Index of hotel</param>
+        /// <returns></returns>
+        public async Task<IActionResult> Create(Guid hotel)
         {
+
+            if ((await _hotelservice.GetAsync(hotel)) == null)
+                return NotFound();
+
             ViewData["HotlelId"] = hotel;
-            ViewData["TypeId"] = new SelectList(_context.RoomTypes, "Id", "Name");
+            ViewData["TypeId"] = getRoomTypeListAsync();
             return View();
         }
 
-        // POST: Rooms/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        ///  Action for create new room from POST method
+        ///  POST: Rooms/Create
+        /// </summary>
+        /// <param name="form">Created room</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price,MaxQuantityOfPeople,TypeId,HotlelId,Images")] RoomImageForm roomFrom)
+        public async Task<IActionResult> Create([Bind("Name,Description,Price,MaxQuantityOfPeople,TypeId,HotlelId,Images")] RoomImageFormViewModel form)
         {
-            Room room = new Room()
+            try
             {
-                Id = Guid.NewGuid(),
-                Name = roomFrom.Name,
-                Description = roomFrom.Description,
-                MaxQuantityOfPeople = roomFrom.MaxQuantityOfPeople,
-                HotlelId = roomFrom.HotlelId,
-                TypeId = roomFrom.TypeId,
-                Price = roomFrom.Price,
-                RoomImages = new List<RoomImages>()
-            };
-            if (ModelState.IsValid)
-            {
-                if (roomFrom.Images != null)
-                {
-                    bool flagIsMain = true;
-                    foreach (var form in roomFrom?.Images)
-                    {
-                        var path = await UploadFile(form, Path.Combine("Images", "Room"));
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            room.RoomImages.Add(new RoomImages()
-                            {
-                                Id = Guid.Parse(Path.GetFileNameWithoutExtension(path)),
-                                Extension = Path.GetExtension(path),
-                                IsMain = flagIsMain,
-                                Path = path,
-                                Upload_time = DateTime.Now,
-                                Room = room,
-                                RoomId = room.Id
-                            });
-                            flagIsMain = false;
-                        }
-                    }
-                }
+                if (!ModelState.IsValid)
+                    return View();
 
-                _context.Add(room);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { hotel = roomFrom.HotlelId });
+                await _roomService.CreateAsync(form, _hostEnvironment.WebRootPath);
+
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["HotlelId"] = new SelectList(_context.Hotels, "Id", "Name", room.HotlelId);
-            ViewData["TypeId"] = new SelectList(_context.RoomTypes, "Id", "Name", room.TypeId);
-            return View(room);
+            catch (DataExeption)
+            {
+                return NotFound();
+            }
+            catch (ErrorModelExeption ex)
+            {
+                foreach (var er in ex.GetData())
+                {
+                    ModelState.AddModelError(er.Key, er.Value);
+                }
+                ViewData["TypeId"] = getRoomTypeListAsync(form.TypeId);
+                return View(form);
+            }
+            
         }
 
-        private async Task<string> UploadFile(IFormFile form, string path)
-        {
-            string file = null;
-
-            if (form != null)
-            {
-                string uploadDir = _hostEnvironment.WebRootPath;
-                file = Guid.NewGuid().ToString() + Path.GetExtension(form.FileName);
-                file = Path.Combine(path, file);
-                using (var fs = new FileStream(Path.Combine(uploadDir, file), FileMode.Create))
-                {
-                    await form.CopyToAsync(fs);
-                }
-            }
-
-            return file;
-        }
-
-        // GET: Rooms/Edit/5
+        /// <summary>
+        /// Action for edit Room
+        /// GET: Rooms/Edit/5
+        /// </summary>
+        /// <param name="id">Id of this room</param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var room = await _context.Rooms.FindAsync(id);
+            RoomDetailsViewModel room = await _roomService.GetAsync(id.Value);
             if (room == null)
-            {
                 return NotFound();
-            }
-            ViewData["HotlelId"] = new SelectList(_context.Hotels, "Id", "Name", room.HotlelId);
-            ViewData["TypeId"] = new SelectList(_context.RoomTypes, "Id", "Name", room.TypeId);
+
+            ViewData["TypeId"] = getRoomTypeListAsync(room.TypeId);
             return View(room);
         }
 
-        // GET: Rooms/Reservation/5
+        /// <summary>
+        /// Action for edit room from POST method
+        /// POST: Rooms/Edit/5
+        /// </summary>
+        /// <param name="id">Id of room</param>
+        /// <param name="room">Created room</param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,MaxQuantityOfPeople,TypeId,HotlelId")] Room room)
+        {
+            if (id != room.Id)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _roomService.UpdateAsync(room);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["TypeId"] = getRoomTypeListAsync(room.TypeId);
+            return View(room);
+        }
+
+        // GET: Rooms/Delete/5
+
+        /// <summary>
+        /// Action for delete room
+        /// </summary>
+        /// <param name="id">Id of room</param>
+        /// <returns></returns>
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            RoomDetailsViewModel room = await _roomService.GetAsync(id.Value);
+            if (room == null)
+                return NotFound();
+
+            return View(room);
+        }
+
+        /// <summary>
+        /// Action for confirm delete action
+        /// POST: Rooms/Delete/5
+        /// </summary>
+        /// <param name="id">Id of room</param>
+        /// <returns></returns>
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            await _roomService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        /// <summary>
+        /// Action for new reservation
+        /// GET: Rooms/Reservation/5
+        /// </summary>
+        /// <param name="id">Id of room</param>
+        /// <returns></returns>
         public async Task<IActionResult> Reservation(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var room = await _context.Rooms.FindAsync(id);
+            RoomDetailsViewModel room = await _roomService.GetAsync(id.Value);
             if (room == null)
+                return NotFound();
+
+            initDataFroReservation();
+            ViewData["Price"] = room.Price;
+            ViewBag.RoomId = id;
+            ViewData["RoomImages"] = room.Images;
+            return View();
+        }
+
+        /// <summary>
+        /// Action for new reservation from POST method
+        /// </summary>
+        /// <param name="reservationForm">Created reservation</param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reservation(
+            [Bind("RoomId,StartDate,EndDate,FirstName,LastName,CountOfRoom,CountOfAdults,CountOfChildren,Country,Street,StreetNumber,ZipCode,City,AdditionalInfo,Email,Phone")]
+            ReservationFormViewModel reservationForm)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    initDataFroReservation();
+                    ViewData["Price"] = (await _roomService.GetAsync(reservationForm.RoomId)).Price;
+                    ViewBag.RoomId = reservationForm.RoomId;
+                    ViewData["RoomImages"] = (await _roomService.GetAsync(reservationForm.RoomId)).Images;
+                    return View();
+                }
+                Reservation res = await _reservationService.BookAsync(reservationForm);
+
+                return RedirectToAction("Index", "Guest", new { reservation = res.Id });
+            }
+            catch (DataExeption)
             {
                 return NotFound();
+
             }
+            catch (ErrorModelExeption ex)
+            {
+                foreach (var er in ex.GetData())
+                {
+                    ModelState.AddModelError(er.Key, er.Value);
+                }
+                initDataFroReservation();
+                ViewData["Price"] = (await _roomService.GetAsync(reservationForm.RoomId)).Price;
+                ViewBag.RoomId = reservationForm.RoomId;
+                ViewData["RoomImages"] = (await _roomService.GetAsync(reservationForm.RoomId)).Images;
+                return View();
+            }
+        }
 
+        #endregion
 
+        #region Private helpers
+
+        /// <summary>
+        /// Method to init data in view for reservation 
+        /// </summary>
+        private void initDataFroReservation()
+        {
             List<int> tmplist = new List<int>();
             tmplist.Add(0);
             tmplist.Add(1);
@@ -196,130 +337,25 @@ namespace HotelReservation.Controllers
             tmplist.Add(3);
             tmplist.Add(4);
             tmplist.Add(5);
-            ViewData["CountOfRooms"] = new SelectList(tmplist,1);
+            ViewData["CountOfRooms"] = new SelectList(tmplist, 1);
             ViewData["CountOfAdults_list"] = new SelectList(tmplist, 1);
             ViewData["CountOfChildrens"] = new SelectList(tmplist, 0);
-            ViewData["Price"] = room.Price;
-            ViewBag.RoomId = id;
-            ReservationFormViewModel tmp = new ReservationFormViewModel() { RoomPrice = room.Price };
-
-            return View(tmp);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Reservation(
-            [Bind("RoomId,StartDate,EndDate,FirstName,LastName,CountOfRoom,CountOfAdults,CountOfChildren,Country,Street,StreetNumber,ZipCode,City,AdditionalInfo,Email,Phone")]
-            ReservationFormViewModel reservationForm)
+        /// <summary>
+        /// method to get list to select in view of category
+        /// </summary>
+        /// <param name="selectedCategory">Optional default select value</param>
+        /// <returns></returns>
+        private async Task<SelectList> getRoomTypeListAsync(Guid? selectedCategory = null)
         {
-
-            ViewBag.RoomId = reservationForm.RoomId;
-
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View();
-                }
-                Reservation res = _reservationService.Book(reservationForm);
-
-                return RedirectToAction(nameof(Index), "Guest", new { reservation = res.Id });
-            }
-            catch (DataExeption)
-            {
-                return NotFound();
-
-            }catch(ErrorModelExeption ex)
-            {
-                foreach(var er in ex.GetData())
-                {
-                    ModelState.AddModelError(er.Key, er.Value);
-                }
-                return View();
-            }
+            if (selectedCategory != null)
+                return new SelectList(await _roomTypeService.GetAllAsync(), "Id", "Name", selectedCategory);
+            else
+                return new SelectList(await _roomTypeService.GetAllAsync(), "Id", "Name");
         }
 
+        #endregion
 
-        // POST: Rooms/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,MaxQuantityOfPeople,TypeId,HotlelId")] Room room)
-        {
-            if (id != room.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(room);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RoomExists(room.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["HotlelId"] = new SelectList(_context.Hotels, "Id", "Name", room.HotlelId);
-            ViewData["TypeId"] = new SelectList(_context.RoomTypes, "Id", "Name", room.TypeId);
-            return View(room);
-        }
-
-        // GET: Rooms/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var room = await _context.Rooms
-                .Include(r => r.Hotlel)
-                .Include(r => r.Type)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            return View(room);
-        }
-
-        // POST: Rooms/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var assingImages = _context.RoomImages.Where(i => i.RoomId == id);
-
-            foreach (var img in assingImages)
-            {
-                System.IO.File.Delete(Path.Combine(_hostEnvironment.WebRootPath, img.Path));
-            }
-
-            _context.RoomImages.RemoveRange(assingImages);
-
-            var room = await _context.Rooms.FindAsync(id);
-            _context.Rooms.Remove(room);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool RoomExists(Guid id)
-        {
-            return _context.Rooms.Any(e => e.Id == id);
-        }
     }
 }

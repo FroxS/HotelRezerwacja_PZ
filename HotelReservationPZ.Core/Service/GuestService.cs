@@ -2,26 +2,49 @@
 using HotelReservation.Core.ViewModels;
 using HotelReservation.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Service
 {
     public class GuestService : IGuestService
     {
+        #region Private Properties
+
+        /// <summary>
+        /// Repository of reservation
+        /// </summary>
         private readonly IReservationRepository _reservationRepository;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Deafult constructor
+        /// </summary>
+        /// <param name="reservationRepository">Repository of reservation</param>
         public GuestService(IReservationRepository reservationRepository)
         {
             _reservationRepository = reservationRepository;
         }
 
-        public GuestReservationViewModel GetReservation(Guid guid)
-        {
-            var reservation = _reservationRepository.GetById(guid);
+        #endregion
 
-            var vm = new GuestReservationViewModel()
+        #region Public methods
+
+        /// <summary>
+        /// Method to gel Guest reservation
+        /// </summary>
+        /// <param name="guid">Id of this reservation</param>
+        /// <returns></returns>
+        public async Task<GuestReservationViewModel> GetReservationAsync(Guid guid)
+        {
+            Reservation reservation = await _reservationRepository.GetByIdAsync(guid);
+            if (reservation == null)
+                return null;
+
+            GuestReservationViewModel vm = new GuestReservationViewModel()
             {
                 ReservationId = reservation.Id,
                 Check_in = reservation.Start_Date,
@@ -32,6 +55,7 @@ namespace HotelReservation.Core.Service
                 CountOfAdults = reservation.CountOfAdults,
                 CountOfChildren = reservation.CountOfChildren,
                 Country = reservation.Guest.Addres.Country,
+                TotalPrice = reservation.Total_Price,
                 Street = reservation.Guest.Addres.Street,
                 StreetNumber = reservation.Guest.Addres.StreetNumber,
                 ZipCode = reservation.Guest.Addres.ZipCode,
@@ -42,6 +66,8 @@ namespace HotelReservation.Core.Service
             };
             return vm;
         }
+
+        #endregion
 
     }
 }

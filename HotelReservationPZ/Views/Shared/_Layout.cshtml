@@ -3,15 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HotelReservationPZ</title>
+    <title>Rezerwacja hoteli</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/main.css" />
     <link rel="stylesheet" href="~/css/tables.css" />
     <link rel="stylesheet" href="~/css/tiles.css" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="~/icon.ico">
     <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
 </head>
-<body >
+<body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark box-shadow mb-3 fixed-top">
             <div class="container">
@@ -23,13 +24,13 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index" >Główna</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Główna</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Hotels" asp-action="Index" >Hotele</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Hotels" asp-action="Index">Hotele</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Rooms" asp-action="Index" >Pokoje</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Rooms" asp-action="Index">Pokoje</a>
                         </li>
                     </ul>
                 </div>
@@ -42,11 +43,37 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+
+    <!-- Footer -->
+    <footer class="page-footer font-small bg-dark darken-3">
+        <!-- Footer Elements -->
         <div class="container">
-            &copy; 2022 - HotelReservationPZ - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+            <!-- Grid row-->
+            <div class="row">
+
+                <!-- Grid column -->
+                <div class="col-md-12 py-5">
+                    <div class="mb-5 flex-center">
+
+                    </div>
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row-->
+
         </div>
+        <!-- Footer Elements -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center text-white py-3">
+            © 2022 Copyright: System rezerwacji pokoi w hotelach
+        </div>
+        <!-- Copyright -->
+
     </footer>
+    <!-- Footer -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

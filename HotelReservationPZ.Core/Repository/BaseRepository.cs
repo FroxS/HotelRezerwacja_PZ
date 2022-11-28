@@ -1,46 +1,95 @@
-﻿using HotelReservation.Core.Helper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Repository
 {
-    // TODO
-    public abstract class BaseRepository<T,C> where T: class where C: DbContext
+    public abstract class BaseRepository<T, C> : IBaseRepository<T> where T : class where C : DbContext
     {
+        #region Protected properties
+
+        /// <summary>
+        /// Context of database
+        /// </summary>
         protected readonly C context;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="context">Context od database</param>
         public BaseRepository(C context)
         {
             this.context = context;
         }
 
-        public virtual List<T> Get()
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Method to get all entites to list
+        /// </summary>
+        /// <returns></returns>
+        public async virtual Task<List<T>> GetAllAsync()
         {
-            return context.GetEntity<T>().ToList();
+            return await context.Set<T>().ToListAsync();
         }
-        public virtual T GetById(Guid id)
+
+        /// <summary>
+        /// Method to get one Tenity from databae by Id
+        /// </summary>
+        /// <param name="id">Id of this Entity</param>
+        /// <returns></returns>
+        public async virtual Task<T> GetByIdAsync(Guid id)
         {
-            return context.GetEntity<T>().Find(id);
+            return await context.Set<T>().FindAsync(id);
         }
-        public virtual void Insert(T task)
+
+        /// <summary>
+        /// Method to insert entity to database
+        /// </summary>
+        /// <param name="task">Created entiti to past to the database</param>
+        /// <returns></returns>
+        public async virtual Task InsertAsync(T task)
         {
-            context.GetEntity<T>().Add(task);
+            await context.Set<T>().AddAsync(task);
         }
-        public virtual void Delete(Guid id)
+
+        /// <summary>
+        /// Method to delete entity from database
+        /// </summary>
+        /// <param name="id">Id of this entity</param>
+        /// <returns></returns>
+        public async virtual Task DeleteAsync(Guid id)
         {
-            T task = context.GetEntity<T>().Find(id);
-            context.GetEntity<T>().Remove(task);
+            T task = await context.Set<T>().FindAsync(id);
+            context.Set<T>().Remove(task);
         }
-        public virtual void Update(T task)
+
+        /// <summary>
+        /// Method to update entity in database
+        /// </summary>
+        /// <param name="entity">Entity to update</param>
+        public virtual void Update(T entity)
         {
-            context.Entry(task).State = EntityState.Modified;
+            context.Entry(entity).State = EntityState.Modified;
         }
-        public void Save()
+
+        /// <summary>
+        /// Method to save change in database
+        /// </summary>
+        /// <returns></returns>
+        public async Task SaveAsync()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
+
+        #endregion
 
     }
 }

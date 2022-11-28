@@ -12,31 +12,49 @@ using HotelReservation.Core.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using HotelReservation.Core.Service;
-using HotelReservation.Core.Exeptions;
 
 namespace HotelReservation.Controllers
 {
     public class GuestController : Controller
     {
-        private readonly HotelDBContext _context;
+        #region Private properties
+
+        /// <summary>
+        /// Service for guests
+        /// </summary>
         private readonly IGuestService _guestService;
 
-        public GuestController(
-            HotelDBContext context,
-            IGuestService guestService)
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="guestService">Service for guest</param>
+        public GuestController(IGuestService guestService)
         {
-            _context = context;
             _guestService = guestService;
         }
 
-        // GET: Guest/Index/5
-        public IActionResult Index(Guid reservation)
+        #endregion
+
+        #region Controler actions
+
+        /// <summary>
+        /// Deafult action for this controler
+        ///  GET: Guest/Index/5
+        /// </summary>
+        /// <param name="reservation"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Index(Guid reservation)
         {
-            
-            var found = _guestService.GetReservation(reservation);
+            var found = await _guestService.GetReservationAsync(reservation);
             if (found == null)
                 return NotFound();
             return View(found);
         }
+
+        #endregion
     }
 }

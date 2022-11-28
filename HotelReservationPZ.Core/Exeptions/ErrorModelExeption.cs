@@ -1,27 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Exeptions
 {
     public class ErrorModelExeption : Exception
     {
+        #region Private properties
 
+        /// <summary>
+        /// Dictionary for messaged of exeption
+        /// </summary>
         private readonly Dictionary<string, string> _dict;
 
-        public ErrorModelExeption(string PropName, string value):base()
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructro
+        /// </summary>
+        /// <param name="propName">Name of property</param>
+        /// <param name="value">Value of error assign to property</param>
+        public ErrorModelExeption(string propName, string value):base()
         {
             _dict = new Dictionary<string, string>();
-            _dict.Add(PropName, value);
+            _dict.Add(propName, value);
         }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="dict">Disctionay of properties nad vaule od errors</param>
         public ErrorModelExeption(Dictionary<string, string> dict) : base()
         {
             _dict = dict;
         }
 
+        #endregion
+
+        #region Public method
+
+        /// <summary>
+        /// Method fo get all data of errors
+        /// </summary>
+        /// <returns>Data of errors</returns>
         public IDictionary<string, string> GetData() => _dict;
+
+        #endregion
     }
 }

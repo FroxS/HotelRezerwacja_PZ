@@ -1,16 +1,8 @@
 ﻿using HotelReservation.Models;
-using System;
-using System.Collections.Generic;
 
 namespace HotelReservation.Core.Repository
 {
-    public interface IReservationRepository
+    public interface IReservationRepository : IBaseRepository<Reservation>
     {
-        void Delete(Guid id);
-        List<Reservation> Get();
-        Reservation GetById(Guid id);
-        void Insert(Reservation task);
-        void Save();
-        void Update(Reservation task);
     }
 }

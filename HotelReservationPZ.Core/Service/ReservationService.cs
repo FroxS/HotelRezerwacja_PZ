@@ -4,18 +4,39 @@ using HotelReservation.Core.ViewModels;
 using HotelReservation.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Service
 {
     public class ReservationService : IReservationService
     {
+        #region Private Properties
+
+        /// <summary>
+        /// Repository of reservation
+        /// </summary>
         private readonly IReservationRepository _reservationRepository;
+
+        /// <summary>
+        /// Repository of rooms
+        /// </summary>
         private readonly IRoomsRepository _roomsRepository;
+
+        /// <summary>
+        /// Repository of hotel
+        /// </summary>
         private readonly IHotelsRepository _hotelsRepository;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Deafult constructor
+        /// </summary>
+        /// <param name="reservationRepository">Repository of reservation</param>
+        /// <param name="roomsRepository">Repository of room</param>
+        /// <param name="hotelsRepository">Repository of hotel</param>
         public ReservationService(
             IReservationRepository reservationRepository,
             IRoomsRepository roomsRepository,
@@ -26,33 +47,38 @@ namespace HotelReservation.Core.Service
             _hotelsRepository = hotelsRepository;
         }
 
-        private double getPrice(double RoomPrice, int CountOfRoom, DateTime start, DateTime end)
-        {
-            int days = (int)(end - start).TotalDays;
+        #endregion
 
-            return RoomPrice * CountOfRoom * days;
+        #region Public methods
+
+        /// <summary>
+        /// Method to take a reservation
+        /// </summary>
+        /// <param name="id">Id of reservation</param>
+        /// <returns></returns>
+        public async Task<Reservation> GetReservation(Guid id)
+        {
+            return await _reservationRepository.GetByIdAsync(id);
         }
 
-        public Reservation GetReservation(Guid id)
+        /// <summary>
+        /// Method to book reservation
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        public async Task<Reservation> BookAsync(ReservationFormViewModel form)
         {
-            return _reservationRepository.GetById(id);
-        }
 
-        public Reservation Book(ReservationFormViewModel form)
-        {
+            if (form == null) throw new DataExeption("Pusty formularz");
+            
 
-            if (form == null)
-            {
-                throw new DataExeption("Pusty formularz");
-            }
-
-            Room room = _roomsRepository.GetById(form.RoomId);
+            Room room = await _roomsRepository.GetByIdAsync(form.RoomId);
             if (room == null)
             {
                 throw new DataExeption("Nie znaleziono pokoju");
             }
 
-            Hotel hotel = _hotelsRepository.GetById(room.HotlelId);
+            Hotel hotel = await _hotelsRepository.GetByIdAsync(room.HotlelId);
             if (hotel == null)
             {
                 throw new DataExeption("Nie znaleziono hotelu");
@@ -62,6 +88,10 @@ namespace HotelReservation.Core.Service
 
             if (form.StartDate > form.EndDate)
                 throw new ErrorModelExeption(nameof(form.StartDate), "Błędna data zameldowania");
+
+
+            if (form.CountOfRoom == 0)
+                throw new ErrorModelExeption(nameof(form.CountOfRoom), "Liczba pokoi nie może być pusta");
 
             if (form.StartDate.Hour < hotel.HoursCheckInFrom || form.StartDate.Hour > hotel.HoursCheckInTo - 1)
                 erros.Add(nameof(form.StartDate), $"Zameldowanie możliwe w godzinach {hotel.HoursCheckInFrom} - {hotel.HoursCheckInTo}");
@@ -99,7 +129,7 @@ namespace HotelReservation.Core.Service
             if (erros.Count > 0)
                 throw new ErrorModelExeption(erros);
 
-            if (!IsRooomAvailable(room.Id, form.StartDate, form.EndDate))
+            if (!(await IsRooomAvailableAsync(room.Id, form.StartDate, form.EndDate)))
                 throw new ErrorModelExeption(
                     nameof(form.StartDate), 
                     $"Wybrany pokój jest zajęty pomiędzy {form.StartDate.ToShortDateString()} a {form.EndDate.ToShortDateString()}");
@@ -134,25 +164,31 @@ namespace HotelReservation.Core.Service
                 CountOfAdults = form.CountOfAdults,
                 CountOfRoom = form.CountOfRoom,
                 CountOfChildren = form.CountOfChildren,
+                Details = form.Details,
                 Rooms = new List<Room>(),
                 Guest = gust,
-                Total_Price = getPrice(room.Price, form.CountOfRoom, form.StartDate, form.EndDate)
+                Total_Price = getPrice(room, form.CountOfRoom, form.StartDate, form.EndDate)
             };
 
 
             reservation.Rooms.Add(room);
-            _reservationRepository.Insert(reservation);
-            _reservationRepository.Save();
+            await _reservationRepository.InsertAsync(reservation);
+            await _reservationRepository.SaveAsync();
 
 
             return reservation;
         }
 
-
-        public bool IsRooomAvailable(Guid roomId, DateTime check_in, DateTime check_out)
+        /// <summary>
+        /// Method to check if Room is avilable
+        /// </summary>
+        /// <param name="roomId">Id of room</param>
+        /// <param name="check_in">Date of check in</param>
+        /// <param name="check_out">Date of check out</param>
+        /// <returns></returns>
+        public async Task<bool> IsRooomAvailableAsync(Guid roomId, DateTime check_in, DateTime check_out)
         {
-
-            foreach(Reservation reserv in _reservationRepository.Get())
+            foreach(Reservation reserv in await _reservationRepository.GetAllAsync())
             {
                 foreach(Room room in reserv.Rooms)
                 {
@@ -193,7 +229,26 @@ namespace HotelReservation.Core.Service
             return true;
         }
 
+        #endregion
 
+        #region Private methods
+
+        /// <summary>
+        /// Method to get price to reservation
+        /// </summary>
+        /// <param name="room">Room of reservation</param>
+        /// <param name="CountOfRoom">Count of rooms</param>
+        /// <param name="start">Date of check in</param>
+        /// <param name="end">Date of check out</param>
+        /// <returns></returns>
+        private double getPrice(Room room, int CountOfRoom, DateTime start, DateTime end)
+        {
+            int days = (int)(end - start).TotalDays;
+
+            return (room.Price * room.Discount) * CountOfRoom * days;
+        }
+
+        #endregion
     }
 
 

@@ -15,8 +15,12 @@ img{
     object-fit:fill;
 }
 
-a.nav-link.text-white:hover{
-    font-weight: bold;
+a.nav-link.text-white {
+    opacity: .8;
+}
+
+a.nav-link.text-white:hover {
+    opacity: 1;
 }
 
 .slider-card{

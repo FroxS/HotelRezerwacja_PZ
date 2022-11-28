@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
@@ -24,6 +28,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\Images\Hotel\" />
     <Folder Include="wwwroot\Images\Room\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\icon.ico" />
   </ItemGroup>
 
 </Project>

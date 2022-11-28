@@ -1,230 +1,222 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HotelReservation.EF;
 using HotelReservation.Models;
 using Microsoft.AspNetCore.Hosting;
 using HotelReservation.Core.ViewModels;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 using HotelReservation.Core.Service;
+using HotelReservation.Core.Exeptions;
 
 namespace HotelReservation.Controllers
 {
     public class HotelsController : Controller
     {
-        private readonly HotelDBContext _context;
+        #region Private Properties
+
+        /// <summary>
+        /// Host environment
+        /// </summary>
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly IHotelService _service;
 
-        public HotelsController(HotelDBContext context, IHotelService service, IWebHostEnvironment hostEnvironment)
+        /// <summary>
+        /// Service for hotel
+        /// </summary>
+        private readonly IHotelService _hotelService;
+
+        /// <summary>
+        /// Service for category of hotel
+        /// </summary>
+        private readonly IHotelCategoryService _hotelCategoryService;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="hotelService">Service for hotel</param>
+        /// <param name="hostEnvironment">Host environment</param>
+        public HotelsController(IHotelService hotelService, IHotelCategoryService hotelCategoryService, IWebHostEnvironment hostEnvironment)
         {
-            _context = context;
             _hostEnvironment = hostEnvironment;
-            _service = service;
+            _hotelService = hotelService;
+            _hotelCategoryService = hotelCategoryService;
         }
 
-        // GET: Hotels
-        public IActionResult Index()
+        #endregion
+
+        #region Controler actions
+
+        /// <summary>
+        /// Default action for this controller
+        /// GET: Hotels
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Index()
         {
-            var hotelDBContext = _context.Hotels.Include(h => h.Category).Include(x => x.Images);
-            return View(_service.GetForList());
+            return View(await _hotelService.GetAllAsync());
         }
 
-        // GET: Hotels/Details/5
+        /// <summary>
+        /// Action for hotel details
+        /// GET: Hotels/Details/5
+        /// </summary>
+        /// <param name="id">Index of this hotel</param>
+        /// <returns></returns>
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var hotel = await _context.Hotels
-                .Include(h => h.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hotel == null)
-            {
-                return NotFound();
-            }
+            var hotel = await _hotelService.GetAsync(id.Value);
+
+            if (hotel == null) return NotFound();
 
             return View(hotel);
         }
 
-        // GET: Hotels/Create
-        public IActionResult Create()
+        /// <summary>
+        /// Action for create new hotel
+        /// GET: Hotels/Create
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.HotelCategorys, "Id", "Name");
+            ViewData["CategoryId"] = await getHootelCategoryListAsync();
             return View();
         }
 
-        // POST: Hotels/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Action for create new hotel from POST method
+        /// POST: Hotels/Create
+        /// </summary>
+        /// <param name="hotel">Created hotel</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,City,IsActive,CategoryId,Images")] HotelImageForm hotel)
+        public async Task<IActionResult> Create([Bind("Name,Description,City,IsActive,CategoryId,Images")] HotelImageFormViewModel hotel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var hotelEF = new Hotel()
+                if (!ModelState.IsValid)
                 {
-                    Id = Guid.NewGuid(),
-                    Name = hotel.Name,
-                    Description = hotel.Description,
-                    City = hotel.City,
-                    IsActive = hotel.IsActive,
-                    CategoryId = hotel.CategoryId,
-                    Images = new List<HotelImages>()
-                };
-
-                if (hotel.Images != null)
-                {
-                    bool flagIsMain = true;
-                    foreach (var form in hotel?.Images)
-                    {
-                        var path = await UploadFile(form, Path.Combine("Images", "Hotel"));
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            hotelEF.Images.Add(new HotelImages()
-                            {
-                                Id = Guid.Parse(Path.GetFileNameWithoutExtension(path)),
-                                Extension = Path.GetExtension(path),
-                                IsMain = flagIsMain,
-                                Path = path,
-                                Upload_time = DateTime.Now,
-                                Hotel = hotelEF,
-                                HotelId = hotelEF.Id
-                            });
-                            flagIsMain = false;
-                        }
-                    }
+                    return View();
                 }
-                
-                _context.Add(hotelEF);
-                await _context.SaveChangesAsync();
+                await _hotelService.CreateAsync(hotel, _hostEnvironment.WebRootPath);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.HotelCategorys, "Id", "Name", hotel.CategoryId);
-            return View(hotel);
-        }
-
-        private async Task<string> UploadFile(IFormFile form, string path)
-        {
-            string file = null;
-
-            if(form != null)
+            catch (DataExeption)
             {
-                string uploadDir = _hostEnvironment.WebRootPath;
-                file = Guid.NewGuid().ToString() + Path.GetExtension(form.FileName);
-                file = Path.Combine(path, file);
-                using (var fs = new FileStream(Path.Combine(uploadDir, file), FileMode.Create))
-                {
-                    await form.CopyToAsync(fs);
-                }
+                return NotFound();
             }
-
-            return file;
+            catch (ErrorModelExeption ex)
+            {
+                foreach (var er in ex.GetData())
+                {
+                    ModelState.AddModelError(er.Key, er.Value);
+                }
+                ViewData["CategoryId"] = await getHootelCategoryListAsync(hotel.CategoryId);
+                return View();
+            }
         }
 
-        // GET: Hotels/Edit/5
+        /// <summary>
+        /// Action for edit Hotel
+        /// GET: Hotels/Edit/5
+        /// </summary>
+        /// <param name="id">Id of this hotel</param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var hotel = await _context.Hotels.FindAsync(id);
-            if (hotel == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(_context.HotelCategorys, "Id", "Name", hotel.CategoryId);
+            var hotel = await _hotelService.GetAsync(id.Value);
+            if (hotel == null) return NotFound(); 
+            ViewData["CategoryId"] = await getHootelCategoryListAsync(hotel.CategoryId);
             return View(hotel);
         }
 
-        // POST: Hotels/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Action for edit Hotel 
+        /// POST: Hotels/Edit/5
+        /// </summary>
+        /// <param name="id">Id of this hotel</param>
+        /// <param name="hotel">Edited hotel form post form</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,City,IsActive,CategoryId")] Hotel hotel)
         {
-            if (id != hotel.Id)
-            {
-                return NotFound();
-            }
+            if (id != hotel.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(hotel);
-                    await _context.SaveChangesAsync();
+                    await _hotelService.Update(hotel);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!HotelExists(hotel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.HotelCategorys, "Id", "Name", hotel.CategoryId);
+            ViewData["CategoryId"] = await getHootelCategoryListAsync(hotel.CategoryId);
             return View(hotel);
         }
 
         // GET: Hotels/Delete/5
+
+        /// <summary>
+        /// Action for delete Hotel
+        /// </summary>
+        /// <param name="id">Id of this hotel</param>
+        /// <returns></returns>
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var hotel = await _context.Hotels
-                .Include(h => h.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (hotel == null)
-            {
-                return NotFound();
-            }
+            Hotel hotel = await _hotelService.GetAsync(id.Value);
+            if (hotel == null) return NotFound();
 
             return View(hotel);
         }
 
-        // POST: Hotels/Delete/5
+        /// <summary>
+        /// Action for delete Hotel from POST methos
+        /// POST: Hotels/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var assingImages = _context.HotelImages.Where(i => i.HotelId == id);
-
-            foreach(var img in assingImages)
-            {
-                System.IO.File.Delete(Path.Combine(_hostEnvironment.WebRootPath, img.Path));
-            }
-
-            _context.HotelImages.RemoveRange(assingImages);
-
-            var hotel = await _context.Hotels.FindAsync(id);
-            _context.Hotels.Remove(hotel);
-            await _context.SaveChangesAsync();
+            await _hotelService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HotelExists(Guid id)
+        #endregion
+
+        #region Helper methods
+
+        /// <summary>
+        /// method to get list to select in view of category
+        /// </summary>
+        /// <param name="selectedCategory">Optional default select value</param>
+        /// <returns></returns>
+        private async Task<SelectList> getHootelCategoryListAsync(Guid? selectedCategory = null)
         {
-            return _context.Hotels.Any(e => e.Id == id);
+            if(selectedCategory != null)
+                return new SelectList(await _hotelCategoryService.GetAllAsync(), "Id", "Name", selectedCategory);
+            else
+                return new SelectList(await _hotelCategoryService.GetAllAsync(), "Id", "Name");
         }
+
+        #endregion
     }
 }

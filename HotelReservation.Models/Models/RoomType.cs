@@ -6,10 +6,20 @@ namespace HotelReservation.Models
 {
     public class RoomType
     {
+        /// <summary>
+        /// Room type id
+        /// </summary>
+        [Key]
         public Guid Id { get; set; }
 
+        /// <summary> 
+        /// Room type name
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// List of rooms - other table
+        /// </summary>
         public List<Room> Rooms { get; set; } = new List<Room>();
     }
 }

@@ -1,39 +1,46 @@
 ﻿using HotelReservation.Core.Service;
-using HotelReservationPZ.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HotelReservationPZ.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IHotelService _service;
+        #region Private proprties
 
-        public HomeController(ILogger<HomeController> logger, IHotelService service)
+        /// <summary>
+        /// service for hotel
+        /// </summary>
+        private readonly IHotelService _hotelService;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="hotelService">Service for hotel</param>
+        public HomeController(IHotelService hotelService)
         {
-            _logger = logger;
-            _service = service;
+            _hotelService = hotelService; ;
         }
 
-        public IActionResult Index()
+        #endregion
+
+        #region Controler actions
+
+        /// <summary>
+        /// Deafult action for this controler
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Index()
         {
-            ViewData["HotelsTop3"] = _service.GetTop(3).ToList();
-            return View(_service.GetForHomeList());
-            //return View();
+            ViewData["HotelsTop3"] = (await _hotelService.GetTopAsync(3)).ToList();
+            return View(await _hotelService.GetForHomeListAsync());
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        #endregion
     }
 }

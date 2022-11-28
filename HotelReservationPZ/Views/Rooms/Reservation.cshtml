@@ -5,26 +5,26 @@
         <section class="row">
             <div class="col-md-6">
                 <div class="pro-img-details m1">
-                    <img src="~/Images/Room/07fe70f1-032f-4f4d-b183-552a4d1f311d.jpg" class="img-fluid" alt="">
+                    <img src="/@Url.Content(ViewBag.RoomImages[0])" class="img-fluid" alt="Zdjęcie pokoju">
                 </div>
                 <div class="pro-img-list m-1 w-100">
                     <div class="form-row h-100 w-100 flex-fill">
                         <div class="col-3 h-100 w-100">
-                            <img src="~/Images/Room/561cd493-3ff8-4fed-9608-7d5f142a70cf.jpg" alt="" class="img-fluid">
+                            <img src="/@Url.Content(ViewBag.RoomImages[1])" alt="Zdjęcie pokoju" class="img-fluid">
                         </div>
                         <div class="col-3 h-100">
                             <a href="#">
-                                <img src="~/Images/Room/74420977-066f-4b2d-8bb5-a5faedd7bc6a.jpg" alt="" class="img-fluid">
+                                <img src="/@Url.Content(ViewBag.RoomImages[2])" alt="Zdjęcie pokoju" class="img-fluid">
                             </a>
                         </div>
                         <div class="col-3 h-100">
                             <a href="#">
-                                <img src="~/Images/Room/b5c3246b-3e19-45de-bdc8-5151ad61163c.jpg" alt="" class="img-fluid">
+                                <img src="/@Url.Content(ViewBag.RoomImages[3])" alt="Zdjęcie pokoju" class="img-fluid">
                             </a>
                         </div>
                         <div class="col-3 h-100">
                             <a href="#">
-                                <img src="~/Images/Room/07fe70f1-032f-4f4d-b183-552a4d1f311d.jpg" alt="" class="img-fluid">
+                                <img src="/@Url.Content(ViewBag.RoomImages[4])" alt="Zdjęcie pokoju" class="img-fluid">
                             </a>
                         </div>
                     </div>
@@ -42,14 +42,14 @@
                                 <div class="form-group">
                                     <input asp-for="StartDate" id="startDate" class="form-control" required>
                                     <label class="control-label">Zameldowanie</label>
-                                    <label asp-validation-for="StartDate" class="text-danger"></label>
+                                    <span asp-validation-for="StartDate" class="d-block text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input asp-for="EndDate" id="endDate" class="form-control" required>
                                     <label class="control-label">Wymeldowanie</label>
-                                    <label asp-validation-for="EndDate" class="text-danger"></label>
+                                    <span asp-validation-for="EndDate" class="d-block text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -57,20 +57,19 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <select asp-for="CountOfRoom" 
-                                            class="form-control" 
+                                    <select asp-for="CountOfRoom"
+                                            class="form-control"
                                             id="CountOfRoomDropDownList"
-                                            asp-items="ViewBag.CountOfRooms"
-                                            ></select>
+                                            asp-items="ViewBag.CountOfRooms"></select>
                                     <span class="select-arrow"></span>
                                     <span class="form-label">Pokoje</span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <select asp-for="CountOfAdults" 
+                                    <select asp-for="CountOfAdults"
                                             id="CountOfAdultsDropDownList"
-                                            class="form-control" 
+                                            class="form-control"
                                             asp-items="ViewBag.CountOfAdults_list"></select>
                                     <span class="select-arrow"></span>
                                     <span class="form-label">Dorośli</span>
@@ -78,9 +77,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <select asp-for="CountOfChildren" 
+                                    <select asp-for="CountOfChildren"
                                             id="CountOfChildrenDropDownList"
-                                            class="form-control" 
+                                            class="form-control"
                                             asp-items="ViewBag.CountOfChildrens"></select>
                                     <span class="select-arrow"></span>
                                     <span class="form-label">Dzieci</span>
@@ -93,14 +92,14 @@
                                 <div class="form-group">
                                     <input asp-for="FirstName" class="form-control" required>
                                     <label class="control-label">Imię</label>
-                                    <label asp-validation-for="FirstName" class="text-danger"></label>
+                                    <span asp-validation-for="FirstName" class="d-block text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input asp-for="LastName" class="form-control" required>
                                     <label class="control-label">Nazwisko</label>
-                                    <label asp-validation-for="LastName" class="text-danger"></label>
+                                    <span asp-validation-for="LastName" class="d-block text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +109,7 @@
                                 <div class="form-group">
                                     <input asp-for="Country" class="form-control" required>
                                     <label class="control-label">Kraj</label>
-                                    <label asp-validation-for="Country" class="text-danger"></label>
+                                    <span asp-validation-for="Country" class="d-block text-danger"></span>
                                 </div>
                             </div>
 
@@ -121,14 +120,14 @@
                                 <div class="form-group">
                                     <input asp-for="Street" class="form-control" required>
                                     <label class="control-label">Ulica</label>
-                                    <label asp-validation-for="Street" class="text-danger"></label>
+                                    <span asp-validation-for="Street" class="d-block text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <input asp-for="StreetNumber" class="form-control" required>
                                     <label class="control-label">Nr. Ulicy</label>
-                                    <label asp-validation-for="StreetNumber" class="text-danger"></label>
+                                    <span asp-validation-for="StreetNumber" class="d-block text-danger"></span>
                                 </div>
                             </div>
 
@@ -139,14 +138,14 @@
                                 <div class="form-group">
                                     <input asp-for="City" class="form-control" required>
                                     <label class="control-label">Miejscowość</label>
-                                    <label asp-validation-for="City" class="text-danger"></label>
+                                    <span asp-validation-for="City" class="d-block text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <input asp-for="ZipCode" class="form-control" required>
                                     <label class="control-label">Kod</label>
-                                    <label asp-validation-for="ZipCode" class="text-danger"></label>
+                                    <span asp-validation-for="ZipCode" class="d-block text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -156,17 +155,29 @@
                                 <div class="form-group">
                                     <input asp-for="Email" class="form-control" required>
                                     <label class="control-label">Email</label>
-                                    <label asp-validation-for="Email" class="text-danger"></label>
+                                    <span asp-validation-for="Email" class="d-block text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input asp-for="Phone" class="form-control" required>
                                     <label class="control-label">Telefon</label>
-                                    <label asp-validation-for="Phone" class="text-danger"></label>
+                                    <span asp-validation-for="Phone" class="d-block text-danger"></span>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input asp-for="Details" class="form-control" required>
+                                    <label class="control-label">Informacje dodatkowe</label>
+                                    <span asp-validation-for="Details" class="d-block text-danger"></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+
 
                         <div class="row">
                             <div class="col-12 m-2">
@@ -193,8 +204,37 @@
                         var startDate = $('#startDate');
                         var endDate = $('#endDate');
 
+                        var today = new Date();
+                        var dd = today.getDate();
+                        var mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
+                        var yyyy = today.getFullYear();
+                        if (dd < 10) {
+                            dd = '0' + dd
+                        }
+                        if (mm < 10) {
+                            mm = '0' + mm
+                        }
+
+                        today = yyyy + '-' + mm + '-' + dd+"T00:00";
+
+                        startDate.attr({ "min": today });
+                        if (startDate.val() == null)
+                            startDate.attr({ "value": today });
+                        endDate.attr({ "min": today  });
+
                         roomDD.change(function() {
                             setPrice();
+                        });
+
+                        startDate.change(function () {
+                            setPrice();
+                            endDate.attr({ "min": startDate.val() });
+                        });
+
+                        endDate.change(function () {
+                            setPrice();
+
+                            startDate.attr({ "max": endDate.val() });
                         });
 
                         function setPrice() {
