@@ -9,7 +9,7 @@
              xmlns:local="clr-namespace:HotelReservationWPF.View"
              mc:Ignorable="d" >
     <Border Grid.Column="0"
-            BorderThickness="0,0,2,0"
+            BorderThickness="0,0,1,0"
             BorderBrush="{DynamicResource PrimaryTextColor}"
             Background="{DynamicResource SecundaryBackgroundColor}"
             CornerRadius="8 0 0 8">
