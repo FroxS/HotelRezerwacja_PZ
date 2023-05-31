@@ -1,9 +1,6 @@
-using HotelReservation.Core.Repository;
-using HotelReservation.Core.Service;
-using HotelReservation.EF;
+using HotelReservation.Core.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,24 +19,12 @@ namespace HotelReservationPZ
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
             services.AddControllersWithViews();
-            services.AddDbContext<HotelDBContext>(
-                    options => options.UseSqlServer("Server=.; Database=hotelreservation; Trusted_Connection=True"));
-            services.AddScoped<IHotelsRepository, HotelsRepository>();
-            services.AddScoped<IHotelCategoryRepository, HotelCategoryRepository>();
-            services.AddScoped<IRoomsRepository, RoomsRepository>();
-            services.AddScoped<IReservationRepository, ReservationRepository>();
-            services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
-            services.AddScoped<IGuestRepository, GuestRepository>();
 
-            services.AddScoped<IHotelService, HotelService>();
-            services.AddScoped<IRoomService, RoomService>();
-            services.AddScoped<IGuestService, GuestService>();
-            services.AddScoped<IReservationService, ReservationService>();
-            services.AddScoped<IHotelCategoryService, HotelCategoryService>();
-            services.AddScoped<IRoomTypeService, RoomTypeService>();
-            
+            services.ConfigureDatabase();
+            services.ConfigureServices();
+            services.ConfigureRepository();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
