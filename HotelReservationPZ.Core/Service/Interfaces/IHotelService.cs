@@ -34,7 +34,9 @@ namespace HotelReservation.Core.Service
         /// Method to gel all hotels to list
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<HotelListViewModel>> GetAllAsync();
+        Task<IEnumerable<HotelListViewModel>> GetAllVMAsync();
+
+        Task<List<Hotel>> GetAllAsync();
 
         /// <summary>
         /// Method to update hotel

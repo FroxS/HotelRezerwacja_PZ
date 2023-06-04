@@ -1,5 +1,9 @@
 ﻿using HotelReservation.Models.Enum;
 using HotelReservationWPF.Conventer;
+using HotelReservationWPF.ViewModel.Core;
+using HotelReservationWPF.ViewModel.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -35,8 +39,6 @@ namespace HotelReservationWPF.Controls
                     CurrentPagePropertyChanged)
                 );
 
-
-
         #endregion
 
         #region Constructors
@@ -59,14 +61,24 @@ namespace HotelReservationWPF.Controls
         {
             if (value is EApplicationPage page)
             {
-                Frame? newPageFrame = (d as PageHost)?.NewPage;
+                PageHost pageHost = d as PageHost;
+                if (pageHost == null)
+                    return value;
+
+                Frame? newPageFrame = pageHost.NewPage;
                 var oldPageContent = newPageFrame.Content;
 
                 // Remove current page from new page frame
                 newPageFrame.Content = null;
 
                 if (App.AppHost?.Services != null)
-                    newPageFrame.Content = page.ToBasePage(App.AppHost.Services);
+                {
+                    INavigation nav = App.AppHost?.Services.GetService<INavigation>();
+                    var newPage = page.ToBasePage(App.AppHost.Services);
+                    nav.PageViewModel = newPage.ViewModelObject as BasePageViewModel;
+                    newPageFrame.Content = newPage;
+                }
+                    
             }
 
 

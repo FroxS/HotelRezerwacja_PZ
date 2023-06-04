@@ -67,6 +67,9 @@ namespace HotelReservation.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Last_Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -201,6 +204,9 @@ namespace HotelReservation.EF.Migrations
 
                     b.Property<DateTime>("End_Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Numer")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Start_Date")
                         .HasColumnType("datetime2");

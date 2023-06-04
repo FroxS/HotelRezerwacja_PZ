@@ -15,6 +15,11 @@ namespace HotelReservation.Models
         public Guid Id { get; set; }
 
         /// <summary>
+        /// Reservation  numer
+        /// </summary>
+        public string Numer { get; set; }
+
+        /// <summary>
         /// Reservation check in
         /// </summary>
         public DateTime Start_Date { get; set; }

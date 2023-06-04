@@ -303,12 +303,32 @@
                 </Grid>
 
                 <StackPanel >
-                    <control:ItemMenuButton IconPath="{StaticResource HomeGeometry}"
-                                                    
-                                         IsMenuSelected="False"
+                    <control:ItemMenuButton IconPath="{StaticResource HomeGeometry}"       
+                                            IsMenuSelected="False"
+                                            ClickCommand="{Binding SetPageCommand}"
+                                            ClickCommandParameter="{x:Static enum:EApplicationPage.DashBoard}"
+                                            Header="Home"/>
+
+                    <control:ItemMenuButton IconPath="{StaticResource Calendar}"
+                                         ContainsSubMenu="False"
+                                         IsMenuSelected="True"
+                                         Header="Rezerwacje"
                                          ClickCommand="{Binding SetPageCommand}"
-                                         ClickCommandParameter="{x:Static enum:EApplicationPage.DashBoard}"
-                                         Header="Home"/>
+                                         ClickCommandParameter="{x:Static enum:EApplicationPage.ReservationPage}"/>
+
+                    <!--<control:ItemMenuButton IconPath="{StaticResource Hotel}"
+                                         ContainsSubMenu="False"
+                                         IsMenuSelected="True"
+                                         Header="Hotele"
+                                         ClickCommand="{Binding SetPageCommand}"
+                                         ClickCommandParameter="{x:Static enum:EApplicationPage.HotelsPage}"/>-->
+
+                    <control:ItemMenuButton IconPath="{StaticResource Bed}"
+                                         ContainsSubMenu="False"
+                                         IsMenuSelected="True"
+                                         Header="Pokoje"
+                                         ClickCommand="{Binding SetPageCommand}"
+                                         ClickCommandParameter="{x:Static enum:EApplicationPage.RoomsPage}"/>
 
                     <control:ItemMenuButton IconPath="{StaticResource SettingsGeometry}"
                                          ContainsSubMenu="False"
@@ -316,6 +336,7 @@
                                          Header="Settings"
                                          ClickCommand="{Binding SetPageCommand}"
                                          ClickCommandParameter="{x:Static enum:EApplicationPage.Settings}"/>
+                    
 
                 </StackPanel>
             </StackPanel>

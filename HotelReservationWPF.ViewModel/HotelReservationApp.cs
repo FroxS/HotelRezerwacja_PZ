@@ -1,8 +1,10 @@
-﻿using HotelReservationWPF.ViewModel.Core;
+﻿using HotelReservation.Models.Enum;
+using HotelReservationWPF.ViewModel.Core;
 using HotelReservationWPF.ViewModel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Windows;
+using System.IO;
+using System.Reflection;
 
 namespace HotelReservationWPF.ViewModel
 {
@@ -11,12 +13,25 @@ namespace HotelReservationWPF.ViewModel
         #region Private Fields
 
         private readonly IServiceProvider _service;
+        private Guid _workingHotel;
 
         #endregion
 
         #region Public properties
 
         public IMainWindow MainWindow { get; }
+
+        public Guid WorkingHotel 
+        { 
+            get => _workingHotel;
+            private set {
+                _workingHotel = value;
+                OnPropertyChanged(nameof(WorkingHotel));
+                Properties.Settings.Default.WorkingHotel = _workingHotel;
+                Properties.Settings.Default.Save();
+            }
+        }
+        public EUserType UserType { get; private set; }
 
         #endregion
 
@@ -26,12 +41,18 @@ namespace HotelReservationWPF.ViewModel
         {
             _service = service;
             MainWindow = _service.GetService<IMainWindow>();
+            WorkingHotel = Properties.Settings.Default.WorkingHotel;
+            UserType = EUserType.Admin;
         }
 
 
         #endregion
 
         #region Public methods
+
+        public bool CanEditRows() => UserType == EUserType.Admin || UserType == EUserType.Boss;
+
+        public bool CanChangeHotel() => UserType == EUserType.Admin || UserType == EUserType.Boss;
 
         public void Run()
         {
@@ -40,8 +61,22 @@ namespace HotelReservationWPF.ViewModel
 
         public void Close()
         {
-            //var window = _service.GetService<System.Windows.Appli>();
-            //window.ShowDialog();
+        }
+
+        public void ChangeHotel(Guid hotelID)
+        {
+            if (CanChangeHotel())
+            {
+                WorkingHotel = hotelID;
+            }
+        }
+
+        public string GetApplicationPath()
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
         }
 
         #endregion

@@ -64,7 +64,7 @@ namespace HotelReservationWPF.ViewModel.Core
 
         private bool _isExecuting;
 
-        private readonly Func<Task> _callback;
+        private readonly Func<object, Task> _callback;
 
         #endregion
 
@@ -86,7 +86,7 @@ namespace HotelReservationWPF.ViewModel.Core
 
         #region Constructors
 
-        public AsyncRelayCommand(Func<Task> callback, Action<Exception>? onException = null)
+        public AsyncRelayCommand(Func<object,Task> callback, Action<Exception>? onException = null)
         {
             _onException = onException;
             _callback = callback;
@@ -98,7 +98,7 @@ namespace HotelReservationWPF.ViewModel.Core
 
         protected async Task ExecuteAsync(object parameter)
         {
-            await _callback();
+            await _callback(parameter);
         }
 
         #endregion

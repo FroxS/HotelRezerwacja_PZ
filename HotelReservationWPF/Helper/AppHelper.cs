@@ -1,5 +1,5 @@
-﻿using HotelReservation.Core.WPFInterfaces;
-using HotelReservationWPF.ViewModel;
+﻿using HotelReservationWPF.ViewModel;
+using HotelReservationWPF.ViewModel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelReservationWPF.Helper

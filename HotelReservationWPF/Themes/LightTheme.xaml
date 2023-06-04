@@ -46,16 +46,18 @@
     <Color x:Key="CFourthIconColor" >#E8E8E8</Color>
     <SolidColorBrush x:Key="FourthIconColor" Color="{DynamicResource CFourthIconColor}"/>
 
-    <Color x:Key="CAdditionalColor1">#FFC107</Color>
+    <Color x:Key="CAdditionalColor1">#f77f00</Color>
     <SolidColorBrush x:Key="AdditionalColor1" Color="{DynamicResource CAdditionalColor1}"/>
-    <!-- Żółty -->
-    <Color x:Key="CAdditionalColor2">#FF4081</Color>
+    
+    <Color x:Key="CAdditionalColor2">#d62828</Color>
     <SolidColorBrush x:Key="AdditionalColor2" Color="{DynamicResource CAdditionalColor2}"/>
-    <!-- Różowy -->
-    <Color x:Key="CAdditionalColor3">#00BCD4</Color>
-    <SolidColorBrush x:Key="AdditionalColor3" Color="{DynamicResource CAdditionalColor3}"/>
-    <!-- Błękitny -->
 
-    <Color x:Key="CbtnClose" >#F72626</Color>
+    <Color x:Key="CAdditionalColor3">#fcbf49</Color>
+    <SolidColorBrush x:Key="AdditionalColor3" Color="{DynamicResource CAdditionalColor3}"/>
+
+    <Color x:Key="CAdditionalColor4">#eae2b7</Color>
+    <SolidColorBrush x:Key="AdditionalColor4" Color="{DynamicResource CAdditionalColor4}"/>
+
+    <Color x:Key="CbtnClose" >#d62828</Color>
     <SolidColorBrush x:Key="btnClose" Color="{DynamicResource CbtnClose}"/>
 </ResourceDictionary>

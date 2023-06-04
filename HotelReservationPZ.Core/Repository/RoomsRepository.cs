@@ -33,6 +33,7 @@ namespace HotelReservation.Core.Repository
             return await context.Rooms
                 .Include(h => h.Type)
                 .Include(h => h.RoomImages)
+                .Include(h => h.Hotlel)
                 .ToListAsync();
         }
 

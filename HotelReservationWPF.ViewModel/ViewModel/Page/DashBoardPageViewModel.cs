@@ -1,9 +1,7 @@
-﻿using HotelReservationWPF.ViewModel.Core;
+﻿using HotelReservation.Models.Enum;
+using HotelReservationWPF.ViewModel.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace HotelReservationWPF.ViewModel.Page
 {
@@ -15,6 +13,8 @@ namespace HotelReservationWPF.ViewModel.Page
 
         #region Public properties
 
+        public ICommand GoToPageCommand { get; protected set; }
+
         #endregion
 
         #region Constructors
@@ -24,9 +24,14 @@ namespace HotelReservationWPF.ViewModel.Page
         /// </summary>
         public DashBoardPageViewModel(IServiceProvider service): base(service) 
         {
-
+            GoToPageCommand = new RelayCommand<EApplicationPage>(SetPage);
         }
 
         #endregion
+
+        #region Commands methods
+
+        #endregion
+
     }
 }

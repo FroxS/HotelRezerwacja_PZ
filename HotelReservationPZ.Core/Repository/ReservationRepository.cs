@@ -3,6 +3,7 @@ using HotelReservation.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Repository
@@ -37,6 +38,19 @@ namespace HotelReservation.Core.Repository
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Method to get all eeservation to list included Guest, Rooms, and hotels of rooms
+        /// </summary>
+        /// <returns></returns>
+        public override List<Reservation> GetAll()
+        {
+            return context.Reservations
+                .Include(g => g.Guest)
+                .Include(r => r.Rooms)
+                .ThenInclude(x => x.Hotlel)
+                .ToList();
+        }
+
 
         /// <summary>
         /// Method to get one reservation from databae by Id included
@@ -54,6 +68,24 @@ namespace HotelReservation.Core.Repository
                 .Include(r => r.Rooms)
                 .ThenInclude(r => r.Hotlel)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        /// <summary>
+        /// Method to get one reservation from databae by Id included
+        /// Guest, Adress of this guest, Rooms, Room images of this rooms and Hotels of this rooms
+        /// </summary>
+        /// <param name="id">Id of this reservation</param>
+        /// <returns></returns>
+        public override Reservation GetById(Guid id)
+        {
+            return context.Reservations
+                .Include(g => g.Guest)
+                .ThenInclude(g => g.Addres)
+                .Include(r => r.Rooms)
+                .ThenInclude(r => r.RoomImages)
+                .Include(r => r.Rooms)
+                .ThenInclude(r => r.Hotlel)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         #endregion

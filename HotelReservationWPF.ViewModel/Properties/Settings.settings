@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="HotelReservationWPF.ViewModel.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="WorkingHotel" Type="System.Guid" Scope="User">
+      <Value Profile="(Default)">9bda0c14-0f79-4ea5-acb8-5cece2fe074a</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

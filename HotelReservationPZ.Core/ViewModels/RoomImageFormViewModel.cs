@@ -50,5 +50,17 @@ namespace HotelReservation.Core.ViewModels
         [Required(ErrorMessage = "Wybierz zdjęcia, minimum 5")]
         public List<IFormFile> Images { get; set; }
 
+        public RoomImageFormViewModel() { }
+
+        public RoomImageFormViewModel(Room room):this()
+        {
+            Name = room.Name;
+            Description = room.Description;
+            Price = room.Price;
+            MaxQuantityOfPeople = room.MaxQuantityOfPeople;
+            TypeId = room.Type.Id == Guid.Empty ? room.TypeId : room.Type.Id;
+            HotlelId = room.Hotlel.Id == Guid.Empty ? room.HotlelId : room.Hotlel.Id;
+        }
+
     }
 }

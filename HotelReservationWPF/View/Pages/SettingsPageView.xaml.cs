@@ -1,0 +1,16 @@
+﻿using HotelReservationWPF.Controls;
+using HotelReservationWPF.ViewModel.Page;
+
+namespace HotelReservationWPF.View.Pages
+{
+    /// <summary>
+    /// Interaction logic for SettingsPageView.xaml
+    /// </summary>
+    public partial class SettingsPageView : BasePage<SettingsPageViewModel>
+    {
+        public SettingsPageView(SettingsPageViewModel? vm) : base(vm)
+        {
+            InitializeComponent();
+        }
+    }
+}

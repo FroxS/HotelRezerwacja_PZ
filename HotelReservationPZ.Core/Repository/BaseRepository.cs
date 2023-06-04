@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Repository
@@ -35,30 +36,41 @@ namespace HotelReservation.Core.Repository
         /// Method to get all entites to list
         /// </summary>
         /// <returns></returns>
-        public async virtual Task<List<T>> GetAllAsync()
-        {
-            return await context.Set<T>().ToListAsync();
-        }
+        public async virtual Task<List<T>> GetAllAsync() => await context.Set<T>().ToListAsync();
+
+        /// <summary>
+        /// Method to get all entites to list
+        /// </summary>
+        /// <returns></returns>
+        public virtual List<T> GetAll() => context.Set<T>().ToList();
 
         /// <summary>
         /// Method to get one Tenity from databae by Id
         /// </summary>
         /// <param name="id">Id of this Entity</param>
         /// <returns></returns>
-        public async virtual Task<T> GetByIdAsync(Guid id)
-        {
-            return await context.Set<T>().FindAsync(id);
-        }
+        public async virtual Task<T> GetByIdAsync(Guid id) => await context.Set<T>().FindAsync(id);
+
+        /// <summary>
+        /// Method to get one Tenity from databae by Id
+        /// </summary>
+        /// <param name="id">Id of this Entity</param>
+        /// <returns></returns>
+        public virtual T GetById(Guid id) => context.Set<T>().Find(id);
 
         /// <summary>
         /// Method to insert entity to database
         /// </summary>
         /// <param name="task">Created entiti to past to the database</param>
         /// <returns></returns>
-        public async virtual Task InsertAsync(T task)
-        {
-            await context.Set<T>().AddAsync(task);
-        }
+        public async virtual Task InsertAsync(T task) => await context.Set<T>().AddAsync(task);
+
+        /// <summary>
+        /// Method to insert entity to database
+        /// </summary>
+        /// <param name="task">Created entiti to past to the database</param>
+        /// <returns></returns>
+        public virtual void Insert(T task) => context.Set<T>().Add(task);
 
         /// <summary>
         /// Method to delete entity from database
@@ -67,7 +79,18 @@ namespace HotelReservation.Core.Repository
         /// <returns></returns>
         public async virtual Task DeleteAsync(Guid id)
         {
-            T task = await context.Set<T>().FindAsync(id);
+            T task = await GetByIdAsync(id);
+            context.Set<T>().Remove(task);
+        }
+
+        /// <summary>
+        /// Method to delete entity from database
+        /// </summary>
+        /// <param name="id">Id of this entity</param>
+        /// <returns></returns>
+        public virtual void Delete(Guid id)
+        {
+            T task = GetById(id);
             context.Set<T>().Remove(task);
         }
 
@@ -75,19 +98,19 @@ namespace HotelReservation.Core.Repository
         /// Method to update entity in database
         /// </summary>
         /// <param name="entity">Entity to update</param>
-        public virtual void Update(T entity)
-        {
-            context.Entry(entity).State = EntityState.Modified;
-        }
+        public virtual void Update(T entity) => context.Entry(entity).State = EntityState.Modified;
 
         /// <summary>
         /// Method to save change in database
         /// </summary>
         /// <returns></returns>
-        public async Task SaveAsync()
-        {
-            await context.SaveChangesAsync();
-        }
+        public async Task SaveAsync() => await context.SaveChangesAsync();
+
+        /// <summary>
+        /// Method to save change in database
+        /// </summary>
+        /// <returns></returns>
+        public void Save() => context.SaveChanges();
 
         #endregion
 

@@ -58,7 +58,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
-            return View(await _hotelService.GetAllAsync());
+            return View(await _hotelService.GetAllVMAsync());
         }
 
         /// <summary>

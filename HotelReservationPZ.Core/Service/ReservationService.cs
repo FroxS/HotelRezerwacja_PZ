@@ -4,6 +4,8 @@ using HotelReservation.Core.ViewModels;
 using HotelReservation.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelReservation.Core.Service
@@ -93,10 +95,10 @@ namespace HotelReservation.Core.Service
             if (form.CountOfRoom == 0)
                 throw new ErrorModelExeption(nameof(form.CountOfRoom), "Liczba pokoi nie może być pusta");
 
-            if (form.StartDate.Hour < hotel.HoursCheckInFrom || form.StartDate.Hour > hotel.HoursCheckInTo - 1)
+            if (form.StartDate.Hour < hotel.HoursCheckInFrom || form.StartDate.Hour > hotel.HoursCheckInTo)
                 erros.Add(nameof(form.StartDate), $"Zameldowanie możliwe w godzinach {hotel.HoursCheckInFrom} - {hotel.HoursCheckInTo}");
 
-            if (form.EndDate.Hour < hotel.HoursCheckOutFrom || form.EndDate.Hour > hotel.HoursCheckOutTo - 1)
+            if (form.EndDate.Hour < hotel.HoursCheckOutFrom || form.EndDate.Hour > hotel.HoursCheckOutTo)
                 erros.Add(nameof(form.EndDate), $"Wymeldowanie możliwe w godzinach {hotel.HoursCheckOutFrom} - {hotel.HoursCheckOutTo}");
 
             if (form.CountOfAdults + form.CountOfChildren > (room.MaxQuantityOfPeople) * form.CountOfRoom)
@@ -154,7 +156,10 @@ namespace HotelReservation.Core.Service
                 Phone = form.Phone,
                 Addres = address,
                 AddresId = address.Id,
+                IsPrivate = form.IsPrivate
             };
+
+            string numer = await GetNewNumberOfReservation();
 
             Reservation reservation = new Reservation()
             {
@@ -167,14 +172,13 @@ namespace HotelReservation.Core.Service
                 Details = form.Details,
                 Rooms = new List<Room>(),
                 Guest = gust,
+                Numer = numer,
                 Total_Price = getPrice(room, form.CountOfRoom, form.StartDate, form.EndDate)
             };
-
 
             reservation.Rooms.Add(room);
             await _reservationRepository.InsertAsync(reservation);
             await _reservationRepository.SaveAsync();
-
 
             return reservation;
         }
@@ -229,6 +233,76 @@ namespace HotelReservation.Core.Service
             return true;
         }
 
+
+        /// <summary>
+        /// Method to check if Room is avilable
+        /// </summary>
+        /// <param name="roomId">Id of room</param>
+        /// <param name="check_in">Date of check in</param>
+        /// <param name="check_out">Date of check out</param>
+        /// <returns></returns>
+        public bool IsRooomAvailable(Guid roomId, DateTime check_in, DateTime check_out)
+        {
+            foreach (Reservation reserv in _reservationRepository.GetAll())
+            {
+                foreach (Room room in reserv.Rooms)
+                {
+                    if (room.Id == roomId)
+                    {
+                        if (check_in >= reserv.Start_Date && check_in <= reserv.End_Date)
+                            return false;
+
+                        if (check_out >= reserv.Start_Date && check_out <= reserv.End_Date)
+                            return false;
+
+                        if (check_in < reserv.Start_Date && check_out > reserv.End_Date)
+                            return false;
+
+                        if (check_in.Year == reserv.Start_Date.Year
+                            && check_in.Month == reserv.Start_Date.Month
+                            && check_in.Day == reserv.Start_Date.Day)
+                            return false;
+
+                        if (check_in.Year == reserv.End_Date.Year
+                            && check_in.Month == reserv.End_Date.Month
+                            && check_in.Day == reserv.End_Date.Day)
+                            return false;
+
+                        if (check_out.Year == reserv.Start_Date.Year
+                            && check_out.Month == reserv.Start_Date.Month
+                            && check_out.Day == reserv.Start_Date.Day)
+                            return false;
+
+                        if (check_out.Year == reserv.End_Date.Year
+                            && check_out.Month == reserv.End_Date.Month
+                            && check_out.Day == reserv.End_Date.Day)
+                            return false;
+
+                    }
+                }
+            }
+            return true;
+        }
+
+
+
+        /// <summary>
+        /// Method to take all reservations
+        /// </summary>
+        /// <returns>All reservations</returns>
+        public async Task<List<Reservation>> GetReservations() => await _reservationRepository.GetAllAsync();
+
+        /// <summary>
+        /// Method to take all reservations
+        /// </summary>
+        /// <returns>All reservations</returns>
+        public async Task<bool> CanelReservation(Guid id)
+        {
+            await _reservationRepository.DeleteAsync(id);
+            await _reservationRepository.SaveAsync();
+            return true;
+        }
+
         #endregion
 
         #region Private methods
@@ -246,6 +320,27 @@ namespace HotelReservation.Core.Service
             int days = (int)(end - start).TotalDays;
 
             return (room.Price * room.Discount) * CountOfRoom * days;
+        }
+
+        private async Task<string> GetNewNumberOfReservation(bool isPrivate = true)
+        {
+            ///PATERN 
+            ///  C - Compny
+            ///  P - Private
+            /// P/NUMBER/DAY/MONTH/YEAR
+            StringBuilder sb = new StringBuilder();
+            var all = await _reservationRepository.GetAllAsync();
+            var count = all.Where(x => x.Guest.IsPrivate == isPrivate).Count();
+            if (isPrivate)
+                sb.Append("P/");
+            else
+                sb.Append("C/");
+
+            sb.Append($"{count}/");
+            sb.Append($"{DateTime.Now.Day}/");
+            sb.Append($"{DateTime.Now.Month}/");
+            sb.Append($"{DateTime.Now.Year}");
+            return sb.ToString();
         }
 
         #endregion

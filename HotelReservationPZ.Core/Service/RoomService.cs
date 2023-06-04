@@ -55,15 +55,13 @@ namespace HotelReservation.Core.Service
 
             if (form == null) throw new DataExeption("Pusty formularz");
 
-            if (form.Images == null) throw new DataExeption("Brak zdjęć");
-
-            if (form.Images.Count < 5) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.Images), "Minimalna liczba zdjęć hotelu to 5");
+            //if ((form?.Images?.Count ?? 0) < 5) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.Images), "Minimalna liczba zdjęć hotelu to 5");
 
             if (form.TypeId == Guid.Empty) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.TypeId), "Nie wybrano typu pokoju");
 
             if (form.MaxQuantityOfPeople < 0) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.MaxQuantityOfPeople), "Maksymalna liczba osób jest mniejsza do 1");
 
-            if (form.HotlelId == Guid.Empty) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.HotlelId), "Nie przypisano pokoju");
+            if (form.HotlelId == Guid.Empty) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.HotlelId), "Nie przypisano hotelu");
 
             if (string.IsNullOrEmpty(form.Description)) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.Description), "Brak opisu");
 
@@ -155,29 +153,13 @@ namespace HotelReservation.Core.Service
             {
                 return (await _roomsRepository.GetAllAsync())
                     .Where(x => x.Name.ToLower().Contains(name?.ToLower() ?? ""))
-                    .Select(x => new RoomListViewModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Image = x.MainImage.Path,
-                    Type = x.Type.Name,
-                    Price = $"{x.Price} zł",
-                });
+                    .Select(x => GetViewModel(ref x));
             }
             else
             {
                 return (await _roomsRepository.GetAllAsync())
                     .Where(x => x.HotlelId == hotel && x.Name.ToLower().Contains(name?.ToLower() ?? ""))
-                    .Select(x => new RoomListViewModel()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Image = x.MainImage.Path,
-                        Type = x.Type.Name,
-                        Price = $"{x.Price} zł",
-                    }
+                    .Select(x => GetViewModel(ref x)
                 );
             }
             
@@ -193,6 +175,7 @@ namespace HotelReservation.Core.Service
         /// <returns></returns>
         public async Task<IEnumerable<RoomListViewModel>> GetListAsync(Guid hotel, string name, DateTime check_in, DateTime check_out)
         {
+            var rooms = (await GetAllAsync()).Where(x => x.HotlelId == hotel && (x.Name.ToLower().Contains(name?.ToLower() ?? "")));
             List<RoomListViewModel> tmp = new List<RoomListViewModel>();
             foreach(RoomListViewModel vm in (await GetListAsync(hotel, name)))
             {
@@ -200,7 +183,6 @@ namespace HotelReservation.Core.Service
                     tmp.Add(vm);
             }
             return tmp;
-
         }
 
         /// <summary>
@@ -212,6 +194,28 @@ namespace HotelReservation.Core.Service
         {
             _roomsRepository.Update(item);
             await _roomsRepository.SaveAsync();
+        }
+
+        public async Task<List<Room>> GetAvailableRooms(Guid hotelId, DateTime check_in, DateTime check_out)
+        {
+            var rooms = (await GetAllAsync()).Where(x => x.HotlelId == hotelId);
+            return await GetAvailableRooms(rooms, check_in, check_out);
+        }
+
+        public async Task<List<Room>> GetAvailableRooms(IEnumerable<Room> rooms, DateTime check_in, DateTime check_out)
+        {
+            List<Room> availableRooms = new List<Room>();
+
+            foreach (Room room in rooms)
+            {
+                if (await _reservationService.IsRooomAvailableAsync(room.Id, check_in, check_out))
+                {
+                    availableRooms.Add(room);
+                }
+            }
+
+            return availableRooms;
+
         }
 
         #endregion
@@ -240,6 +244,35 @@ namespace HotelReservation.Core.Service
             }
 
             return file;
+        }
+
+        private async Task<string> UploadFile(string base64, string path)
+        {
+            string file = null;
+
+            if (base64 != null)
+            {
+                byte[] fileBite = Convert.FromBase64String(base64);
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    await fs.WriteAsync(fileBite, 0,fileBite.Length);
+                }
+            }
+
+            return file;
+        }
+
+        private RoomListViewModel GetViewModel(ref Room room)
+        {
+            return new RoomListViewModel()
+            {
+                Id = room.Id,
+                Name = room.Name,
+                Description = room.Description,
+                Image = room.MainImage.Path,
+                Type = room.Type.Name,
+                Price = $"{room.Price} zł",
+            };
         }
 
         #endregion

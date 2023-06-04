@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
 using HotelReservation.Core.Helpers;
-using HotelReservation.Core.Repository;
-using HotelReservation.Core.WPFInterfaces;
 using HotelReservationWPF.View;
 using HotelReservationWPF.View.Pages;
 using HotelReservationWPF.ViewModel; 
@@ -36,7 +34,6 @@ namespace HotelReservationWPF
                 services.ConfigureDatabase();
                 services.ConfigureServices();
                 services.ConfigureRepository();
-                PreparePages(services);
                 PrepareViewModels(services);
                 PrepareViews(services);
                 PrepareApplication(services);
@@ -75,23 +72,23 @@ namespace HotelReservationWPF
         {
             services.AddTransient<IMainWindow, MainWindow>();
             services.AddTransient<DashBoardPageView>();
-            //services.AddSingleton<ILoginWindow, LoginView>();
-            //services.AddSingleton<IRegisterWindow, RegisterView>();
+            services.AddTransient<HotelsPageView>();
+            services.AddTransient<ReservationsPageView>();
+            services.AddTransient<RoomsPageView>();
+            services.AddTransient<ReservationDetailsPageView>();
+            services.AddTransient<BookPageView>();
+            services.AddTransient<SettingsPageView>();
         }
 
         private void PrepareViewModels(IServiceCollection services)
         {
-            
-            //services.AddSingleton<MainViewModel>();
-            //services.AddSingleton<LoginViewModel>();
-            //services.AddSingleton<RegisterViewModel>();
-        }
-
-
-        private void PreparePages(IServiceCollection services)
-        {
+            services.AddTransient<ReservationsPageViewModel>();
             services.AddTransient<DashBoardPageViewModel>();
-            //services.AddTransient<ProductsPage>();
+            services.AddTransient<RoomsPageViewModel>();
+            services.AddTransient<HotelsPageViewModel>();
+            services.AddTransient<ReservationDetailsPageViewModel>();
+            services.AddTransient<BookPageViewModel>();
+            services.AddTransient<SettingsPageViewModel>();
         }
 
         private void AddCOnfiguration(IServiceCollection services)

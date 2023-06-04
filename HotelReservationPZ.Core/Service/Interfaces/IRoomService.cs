@@ -61,5 +61,9 @@ namespace HotelReservation.Core.Service
         /// <param name="check_out">Check out of rervation</param>
         /// <returns></returns>
         Task<IEnumerable<RoomListViewModel>> GetListAsync(Guid hotel, string name, DateTime check_in, DateTime check_out);
+
+        Task<List<Room>> GetAvailableRooms(Guid hotelId, DateTime check_in, DateTime check_out);
+
+        Task<List<Room>> GetAvailableRooms(IEnumerable<Room> rooms , DateTime check_in, DateTime check_out);
     }
 }

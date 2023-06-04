@@ -35,7 +35,8 @@
 
                 <Grid Grid.Row="0"
                       Background="{DynamicResource PrimaryBackgroundColor}"
-                      MouseDown="StackPanel_MouseDown">
+                      MouseDown="StackPanel_MouseDown" MouseLeftButtonDown="Grid_MouseLeftButtonDown"
+                      >
                     <StackPanel HorizontalAlignment="Right" 
                             VerticalAlignment="Top" 
                             Margin="0,5,10,0" 

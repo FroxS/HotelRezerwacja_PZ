@@ -34,6 +34,9 @@ namespace HotelReservation.Models
         /// </summary>
         public string Phone { get; set; }
 
+
+        public bool IsPrivate { get; set; }
+
         // <summary>
         /// Guest addres - other table
         /// </summary>

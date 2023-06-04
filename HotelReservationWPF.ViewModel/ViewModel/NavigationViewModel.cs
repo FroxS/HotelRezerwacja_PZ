@@ -1,8 +1,7 @@
-﻿using HotelReservation.Core.WPFInterfaces;
-using HotelReservation.Models.Enum;
+﻿using HotelReservation.Models.Enum;
 using HotelReservation.Models.WPFModel;
 using HotelReservationWPF.ViewModel.Core;
-using HotelReservationWPF.ViewModel.Page;
+using HotelReservationWPF.ViewModel.Interfaces;
 using Microsoft.Extensions.Hosting;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -20,6 +19,8 @@ namespace HotelReservationWPF.ViewModel
         public IHost? AppHost { get; set; }
 
         public EApplicationPage Page { get; protected set; }
+
+        public BasePageViewModel PageViewModel { get; set; }
 
         public ObservableCollection<NavItem> NavItems { get; protected set; }
 
@@ -39,15 +40,16 @@ namespace HotelReservationWPF.ViewModel
         public NavigationViewModel()
         {
             SetPageCommand = new RelayCommand<EApplicationPage>((o) => { SetPage(o); });
-            SetPage(EApplicationPage.DashBoard);
+            SetPage(EApplicationPage.RoomsPage);
         }
 
         #endregion
 
         #region Public Methods
 
-        public void SetPage(EApplicationPage page)
+        public void SetPage(EApplicationPage page, BasePageViewModel pageViewModel = null)
         {
+            pageViewModel = null;
             OnPropertyChanging(nameof(Page));
             Page = page;
             OnPropertyChanged(nameof(Page));

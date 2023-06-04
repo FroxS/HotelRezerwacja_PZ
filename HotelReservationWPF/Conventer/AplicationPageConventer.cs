@@ -21,13 +21,18 @@ namespace HotelReservationWPF.Conventer
             {
                 case EApplicationPage.DashBoard:
                     return services.GetRequiredService<DashBoardPageView>();
-                //case EApplicationPage.Products:
-                //    return services.GetRequiredService<ProductsPage>();
-                //case EApplicationPage.Suppliers:
-                //    return services.GetRequiredService<SuppliersPage>();
-                //case EApplicationPage.ProductGroups:
-                //    return services.GetRequiredService<ProductGroupPage>();
-
+                case EApplicationPage.ReservationPage:
+                    return services.GetRequiredService<ReservationsPageView>();
+                case EApplicationPage.RoomsPage:
+                    return services.GetRequiredService<RoomsPageView>();
+                case EApplicationPage.HotelsPage:
+                    return services.GetRequiredService<HotelsPageView>();
+                case EApplicationPage.ReservationDetailsPage:
+                    return services.GetRequiredService<ReservationDetailsPageView>();
+                case EApplicationPage.BookPage:
+                    return services.GetRequiredService<BookPageView>();
+                case EApplicationPage.Settings:
+                    return services.GetRequiredService<SettingsPageView>();
                 default:
                     Debugger.Break();
                     return null;

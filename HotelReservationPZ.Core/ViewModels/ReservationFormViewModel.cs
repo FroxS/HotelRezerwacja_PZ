@@ -15,13 +15,13 @@ namespace HotelReservation.Core.ViewModels
         /// Date of check in
         /// </summary>
         [Required(ErrorMessage = "Data zamedlowania jest pusta")]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Date of check out
         /// </summary>
         [Required(ErrorMessage = "Data wymeldowania jest pusta")]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; } = DateTime.Now.AddDays(1);
 
         /// <summary>
         /// Guest first name
@@ -39,6 +39,11 @@ namespace HotelReservation.Core.ViewModels
         /// Room price
         /// </summary>
         public double RoomPrice { get; set; }
+
+        /// <summary>
+        /// Is person private
+        /// </summary>
+        public bool IsPrivate { get; set; }
 
         /// <summary>
         /// Guset street number 
@@ -107,5 +112,8 @@ namespace HotelReservation.Core.ViewModels
         [Phone(ErrorMessage ="Niepoprany numer telefonu")]
         [Required(ErrorMessage = "Brak numeru telefonu")]
         public string Phone { get; set; }
+
+        public Guid AddresId { get; set; }
+        public Guid GuestId { get; set; }
     }
 }

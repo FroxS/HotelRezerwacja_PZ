@@ -43,6 +43,14 @@ namespace HotelReservationWPF.View
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
                 DragMove();
         }
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ClickCount > 1)
+            {
+                btnRestore_Click(sender, e);
+            }
+        }
         // End: Button Close | Restore | Minimize
 
     }

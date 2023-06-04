@@ -9,10 +9,42 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HotelReservationWPF.ViewModel\HotelReservationWPF.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="View\Pages\SettingsPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\HotelsPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\BookPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\ReservationDetailsPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\RoomsPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Pages\ReservationsPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="View\Pages\ReservationsPageView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="View\Pages\Reservation\" />
   </ItemGroup>
 
 </Project>

@@ -144,9 +144,9 @@ namespace HotelReservation.Core.Service
         /// Method to gel all hotels to list
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<HotelListViewModel>> GetAllAsync()
+        public async Task<IEnumerable<HotelListViewModel>> GetAllVMAsync()
         {
-            List<HotelListViewModel> items = (await _hotelsRepository.GetAllAsync()).Select(item =>
+            List<HotelListViewModel> items = (await GetAllAsync()).Select(item =>
                 new HotelListViewModel()
                 {
                     Id = item.Id,
@@ -160,6 +160,18 @@ namespace HotelReservation.Core.Service
                 ).ToList();
             return items;
         }
+
+        /// <summary>
+        /// Method to gel all hotels to list
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Hotel>> GetAllAsync()
+        {
+            List<Hotel> items = (await _hotelsRepository.GetAllAsync());
+            return items;
+        }
+
+
 
         /// <summary>
         /// Methof to get only hotels

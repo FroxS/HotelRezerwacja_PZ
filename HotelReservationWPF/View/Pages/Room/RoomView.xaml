@@ -1,0 +1,210 @@
+﻿<UserControl x:Class="HotelReservationWPF.View.Pages.Room.RoomView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:HotelReservationWPF.Conventer"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:VM="clr-namespace:HotelReservationWPF.ViewModel.Page;assembly=HotelReservationWPF.ViewModel"
+             xmlns:local="clr-namespace:HotelReservationWPF.View.Pages.Room"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance Type=VM:RoomViewModel}"
+             Background="{StaticResource PrimaryBackgroundColor}">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+
+        <Style TargetType="{x:Type DatePicker}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Height" Value="25"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Margin="0,0,0,10"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="{Binding Title, FallbackValue=Pokój}"
+                       FontSize="18"/>
+        </StackPanel>
+
+
+        <Grid Grid.Row="1"
+                  Margin="10"
+              IsEnabled="{Binding IsEditing}"
+                  Grid.IsSharedSizeScope="True"
+                  >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" 
+              Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Nazwa:"
+                       Grid.Column="0"/>
+                <TextBox Width="200"
+                     Text="{Binding Room.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="1"/>
+            </Grid>
+
+            <Grid Grid.Row="1" 
+                      Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Opis:"
+                       Grid.Column="0"/>
+                <TextBox Width="200"
+                     Text="{Binding Room.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="1"/>
+            </Grid>
+
+            <Grid Grid.Row="2" 
+                      Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Cena:"
+                       Grid.Column="0"/>
+                <TextBox Width="200"
+                     Text="{Binding Room.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="1"/>
+            </Grid>
+
+            <Grid Grid.Row="3" 
+                      Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Zniżka:"
+                       Grid.Column="0"/>
+                <TextBox Width="200"
+                     Text="{Binding Room.Discount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="1"/>
+            </Grid>
+
+            <Grid Grid.Row="4" 
+                      Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Dorośli:"
+                       Grid.Column="0"/>
+                <TextBox Width="200"
+                     Text="{Binding Room.MaxQuantityOfPeople, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Column="1"/>
+            </Grid>
+
+            <Grid Grid.Row="5" 
+                      Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Typ:"
+                       Grid.Column="0"/>
+                <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding RoomTypes}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedItem="{Binding Room.Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }">
+
+                </ComboBox>
+            </Grid>
+
+            <Grid Grid.Row="6" 
+              Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" SharedSizeGroup="LeftHeader"/>
+                    <ColumnDefinition Width="auto" SharedSizeGroup="RightHeader"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel  Grid.Column="0" Orientation="Horizontal"
+                         >
+                    <TextBlock Text="Zdjećia:"
+                           Margin="0"
+                      />
+                    <Button Content="..."
+                        Width="20" Height="20"
+                        Command="{Binding UploadImagesCommad}"
+                        Margin="5,0"/>
+                </StackPanel>
+
+                <ListView x:Name="TvBox" 
+                      ItemsSource="{Binding Images, UpdateSourceTrigger=PropertyChanged,
+                            NotifyOnSourceUpdated=True,NotifyOnTargetUpdated=True}"
+                      Height="100"
+                      Width="200"
+                      VerticalAlignment="Top"
+                      Grid.Column="1">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
+                                <Image Source="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Top"
+                                   Width="100"
+                                   Stretch="Uniform"
+                                   Height="100"/>
+                                <TextBlock Text="TTT" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Bottom" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+
+        </Grid>
+
+        <StackPanel Grid.Row="2"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Content="Zapisz"
+                    Command="{Binding SaveCommand}"
+                    Visibility="{Binding IsEditing, Converter={conv:BoolToVisibleConventer}, ConverterParameter=True}"
+                    Width="100"/>
+            <Button Content="Edytuj"
+                    Command="{Binding EditCommad}"
+                    Visibility="{Binding IsEditing, Converter={conv:BoolToVisibleConventer}}"
+                    Width="100"/> 
+        </StackPanel>
+
+
+    </Grid>
+    
+    
+</UserControl>
