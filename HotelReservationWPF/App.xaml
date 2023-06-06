@@ -8,8 +8,8 @@
             <ResourceDictionary.MergedDictionaries>
 
                 <ResourceDictionary Source="Themes/LightTheme.xaml"/>
-
-                <ResourceDictionary Source="Styles/Icons.xaml"/>
+                <ResourceDictionary Source="Styles/DataGridStyle.xaml"/>
+                <ResourceDictionary Source="Styles/Icons.xaml"/> 
                 <ResourceDictionary Source="Styles/MainStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

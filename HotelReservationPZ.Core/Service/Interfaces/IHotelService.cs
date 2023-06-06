@@ -30,6 +30,8 @@ namespace HotelReservation.Core.Service
         /// <returns></returns>
         Task<Hotel> GetAsync(Guid id);
 
+        Hotel Get(Guid id);
+
         /// <summary>
         /// Method to gel all hotels to list
         /// </summary>

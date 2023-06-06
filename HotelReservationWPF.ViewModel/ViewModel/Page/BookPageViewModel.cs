@@ -136,16 +136,31 @@ namespace HotelReservationWPF.ViewModel.Page
 
         private async Task LoadAsync()
         {
-            var roomService = await _service.GetService<IRoomService>().GetAllAsync();
-            Rooms = new ObservableCollection<Room>(roomService);
-            var hotel = await _service.GetService<IHotelService>().GetAsync(WorkingHotel);
-            HoursCheckIn = new ObservableCollection<int>(Enumerable.Range(hotel.HoursCheckInFrom, (hotel.HoursCheckInTo - hotel.HoursCheckInFrom) +1));
-            SelectedHoursCheckIn = HoursCheckIn.FirstOrDefault();
-            HoursCheckOut = new ObservableCollection<int>(Enumerable.Range(hotel.HoursCheckOutFrom,(hotel.HoursCheckOutTo- hotel.HoursCheckOutFrom) +1 ));
-            SelectedHoursCheckOut = HoursCheckOut.FirstOrDefault();
-            OnDataLoaded?.Invoke(this);
-            OnPropertyChanged(nameof(Reservation));
-            await SetAviableRooms();
+            try
+            {
+                IsTaskRunning = true;
+                await Task.Delay(1000);
+                var roomService = await _service.GetService<IRoomService>().GetAllAsync();
+                Rooms = new ObservableCollection<Room>(roomService);
+                var hotel = await _service.GetService<IHotelService>().GetAsync(WorkingHotel);
+                HoursCheckIn = new ObservableCollection<int>(Enumerable.Range(hotel.HoursCheckInFrom, (hotel.HoursCheckInTo - hotel.HoursCheckInFrom) + 1));
+                SelectedHoursCheckIn = HoursCheckIn.FirstOrDefault();
+                HoursCheckOut = new ObservableCollection<int>(Enumerable.Range(hotel.HoursCheckOutFrom, (hotel.HoursCheckOutTo - hotel.HoursCheckOutFrom) + 1));
+                SelectedHoursCheckOut = HoursCheckOut.FirstOrDefault();
+                OnDataLoaded?.Invoke(this);
+                OnPropertyChanged(nameof(Reservation));
+                await SetAviableRooms();
+                IsTaskRunning = false;
+            }
+            catch(System.Exception ex)
+            {
+                IsTaskRunning = false;
+            }
+            finally
+            {
+                IsTaskRunning = false;
+            }
+            
 
         }
 

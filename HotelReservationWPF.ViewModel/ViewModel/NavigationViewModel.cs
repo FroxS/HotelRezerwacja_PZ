@@ -49,6 +49,8 @@ namespace HotelReservationWPF.ViewModel
 
         public void SetPage(EApplicationPage page, BasePageViewModel pageViewModel = null)
         {
+            if (page == Page)
+                return;
             pageViewModel = null;
             OnPropertyChanging(nameof(Page));
             Page = page;

@@ -12,11 +12,8 @@ namespace HotelReservationWPF.ViewModel.Core
         #region Protected properties
 
         protected readonly IServiceProvider _service;
-
         protected Guid WorkingHotel => _service.GetService<IHotelReservationApp>().WorkingHotel;
-
         protected INavigation _nav => _service.GetService<INavigation>();
-
         protected IHotelReservationApp _hotelApp => _service.GetService<IHotelReservationApp>();
 
         #endregion

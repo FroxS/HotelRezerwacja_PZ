@@ -7,7 +7,7 @@ using HotelReservationWPF.ViewModel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
-namespace HotelReservationWPF.ViewModel.Page
+namespace HotelReservationWPF.ViewModel.Service
 {
     public abstract class BaseItemViewModel<Entity> : BaseViewModel
     {

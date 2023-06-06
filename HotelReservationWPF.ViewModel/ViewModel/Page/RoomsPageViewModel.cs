@@ -1,6 +1,7 @@
 ﻿using HotelReservation.Core.Service;
 using HotelReservation.Models;
 using HotelReservationWPF.ViewModel.Core;
+using HotelReservationWPF.ViewModel.Service;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.ObjectModel;

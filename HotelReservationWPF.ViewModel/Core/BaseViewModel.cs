@@ -17,7 +17,14 @@ namespace HotelReservationWPF.ViewModel.Core
         public event PropertyChangedEventHandler? PropertyChanged = (sender, e) => { };
         public event PropertyChangingEventHandler? PropertyChanging = (sender, e) => { };
         public override bool _CanValidate { get; protected set; } = false;
-        public virtual bool IsTaskRunning { get => _isTaskRunning; set { _isTaskRunning = value; OnPropertyChanged(nameof(IsTaskRunning)); } }
+        public virtual bool IsTaskRunning 
+        { 
+            get => _isTaskRunning; 
+            set { 
+                _isTaskRunning = value; 
+                OnPropertyChanged(nameof(IsTaskRunning)); 
+            } 
+        }
 
         #endregion
 

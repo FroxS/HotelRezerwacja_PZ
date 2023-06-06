@@ -1,4 +1,6 @@
-﻿using HotelReservation.Models.Enum;
+﻿using HotelReservation.Core.Service;
+using HotelReservation.Models;
+using HotelReservation.Models.Enum;
 using HotelReservationWPF.ViewModel.Core;
 using HotelReservationWPF.ViewModel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +33,10 @@ namespace HotelReservationWPF.ViewModel
                 Properties.Settings.Default.Save();
             }
         }
+
         public EUserType UserType { get; private set; }
+
+        public IDialogService DialogService => _service.GetService<IDialogService>();
 
         #endregion
 
@@ -53,6 +58,8 @@ namespace HotelReservationWPF.ViewModel
         public bool CanEditRows() => UserType == EUserType.Admin || UserType == EUserType.Boss;
 
         public bool CanChangeHotel() => UserType == EUserType.Admin || UserType == EUserType.Boss;
+
+        public Hotel GetWorkingHotel() => _service.GetService<IHotelService>().Get(this.WorkingHotel);
 
         public void Run()
         {

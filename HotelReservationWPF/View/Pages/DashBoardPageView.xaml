@@ -13,7 +13,7 @@
              Title="Home"
              d:DataContext="{d:DesignInstance Type=pageVM:DashBoardPageViewModel}"
              Background="{StaticResource PrimaryBackgroundColor}">
-    <Grid Margin="50">
+    <Grid Margin="20">
         <Grid.Resources>
             <Style TargetType="{x:Type Button}"
                    x:Key="TileBtn">
@@ -36,6 +36,7 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryBackgroundColor}"/>
                                 </Trigger>
 
                             </ControlTemplate.Triggers>
@@ -44,7 +45,30 @@
                 </Setter>
             </Style>
         </Grid.Resources>
-        <WrapPanel VerticalAlignment="Center"
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <Path Data="{StaticResource Hotel}"
+                  Fill="{StaticResource PrimaryTextColor}"
+                  Width="50"
+                  Stretch="Uniform"/>
+            <TextBlock Text="{Binding HotelName,FallbackValue=Hotel}"
+                       FontSize="18"
+                       VerticalAlignment="Center"
+                       Margin="10,0"/>
+        </StackPanel>
+        
+        
+        <WrapPanel Grid.Row="1" 
+                   Margin="50,20"
+                   VerticalAlignment="Center"
                    HorizontalAlignment="Center">
             <Button Style="{DynamicResource TileBtn}"
                     Command="{Binding GoToPageCommand}"

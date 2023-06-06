@@ -10,6 +10,7 @@ using HotelReservation.Core.Service;
 using HotelReservation.Core.ViewModels;
 using HotelReservation.Models;
 using HotelReservationWPF.ViewModel.Core;
+using HotelReservationWPF.ViewModel.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 

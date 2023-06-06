@@ -58,6 +58,7 @@ namespace HotelReservationWPF.ViewModel.Page
         /// </summary>
         public SettingsPageViewModel(IServiceProvider service): base(service) 
         {
+            _hotelApp.DialogService.ShowAlert("DSAD");
             LoadAsync();
         }
 

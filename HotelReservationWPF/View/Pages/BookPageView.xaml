@@ -17,7 +17,7 @@
              Title="Reservation"
              Background="{StaticResource PrimaryBackgroundColor}">
     <ScrollViewer>
-        <Grid>
+        <Grid >
             <Grid.Resources>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="VerticalAlignment" Value="Center"/>

@@ -7,6 +7,8 @@
              xmlns:control="clr-namespace:HotelReservationWPF.Controls"
              xmlns:conv="clr-namespace:HotelReservationWPF.Conventer"
              xmlns:local="clr-namespace:HotelReservationWPF.View"
+             xmlns:vm="clr-namespace:HotelReservationWPF.ViewModel;assembly=HotelReservationWPF.ViewModel"
+             d:DataContext="{d:DesignInstance Type=vm:NavigationViewModel}"
              mc:Ignorable="d" >
     <Border Grid.Column="0"
             BorderThickness="0,0,1,0"
@@ -63,7 +65,7 @@
                                                         <Setter Property="Cursor" Value="Hand"/>
                                                     </Trigger>
                                                     <DataTrigger Binding="{Binding IsMenuSelected, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                                        <Setter Property="BorderBrush" Value="{StaticResource Color4Brush}"/>
+                                                        <Setter Property="BorderBrush" Value="{StaticResource AdditionalColor1}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -79,7 +81,7 @@
                                             <Path Stretch="Uniform" 
                                                   Fill="{TemplateBinding Foreground}" 
                                                   Height="30"
-                                                  x:Name="path"
+                                                  Name="path"
                                                   Width="30"
                                                   Data="{TemplateBinding IconPath}"
                                                   Margin="0,0,0,0"
@@ -194,7 +196,15 @@
                                     </StackPanel>
 
                                 </StackPanel>
-
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMenuSelected" Value="True">
+                                        <Setter TargetName="path" Property="Fill" Value="{StaticResource AdditionalColor1}"/>
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AdditionalColor1}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="path" Property="Fill" Value="{StaticResource AdditionalColor1}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
@@ -304,38 +314,40 @@
 
                 <StackPanel >
                     <control:ItemMenuButton IconPath="{StaticResource HomeGeometry}"       
-                                            IsMenuSelected="False"
+                                            IsMenuSelected="{Binding Page, 
+                                                                     Converter={conv:IsPageTheSameWithParameterConventer}, 
+                                                                     ConverterParameter={x:Static enum:EApplicationPage.DashBoard}}"
                                             ClickCommand="{Binding SetPageCommand}"
                                             ClickCommandParameter="{x:Static enum:EApplicationPage.DashBoard}"
                                             Header="Home"/>
 
                     <control:ItemMenuButton IconPath="{StaticResource Calendar}"
-                                         ContainsSubMenu="False"
-                                         IsMenuSelected="True"
-                                         Header="Rezerwacje"
-                                         ClickCommand="{Binding SetPageCommand}"
-                                         ClickCommandParameter="{x:Static enum:EApplicationPage.ReservationPage}"/>
+                                            ContainsSubMenu="False"
+                                            IsMenuSelected="{Binding Page, 
+                                                                     Converter={conv:IsPageTheSameWithParameterConventer}, 
+                                                                     ConverterParameter={x:Static enum:EApplicationPage.ReservationPage}}"
+                                            Header="Rezerwacje"
+                                            ClickCommand="{Binding SetPageCommand}"
+                                            ClickCommandParameter="{x:Static enum:EApplicationPage.ReservationPage}"/>
 
-                    <!--<control:ItemMenuButton IconPath="{StaticResource Hotel}"
-                                         ContainsSubMenu="False"
-                                         IsMenuSelected="True"
-                                         Header="Hotele"
-                                         ClickCommand="{Binding SetPageCommand}"
-                                         ClickCommandParameter="{x:Static enum:EApplicationPage.HotelsPage}"/>-->
 
                     <control:ItemMenuButton IconPath="{StaticResource Bed}"
-                                         ContainsSubMenu="False"
-                                         IsMenuSelected="True"
-                                         Header="Pokoje"
-                                         ClickCommand="{Binding SetPageCommand}"
-                                         ClickCommandParameter="{x:Static enum:EApplicationPage.RoomsPage}"/>
+                                            ContainsSubMenu="False"
+                                            IsMenuSelected="{Binding Page, 
+                                                                     Converter={conv:IsPageTheSameWithParameterConventer}, 
+                                                                     ConverterParameter={x:Static enum:EApplicationPage.RoomsPage}}"
+                                            Header="Pokoje"
+                                            ClickCommand="{Binding SetPageCommand}"
+                                            ClickCommandParameter="{x:Static enum:EApplicationPage.RoomsPage}"/>
 
                     <control:ItemMenuButton IconPath="{StaticResource SettingsGeometry}"
-                                         ContainsSubMenu="False"
-                                         IsMenuSelected="True"
-                                         Header="Settings"
-                                         ClickCommand="{Binding SetPageCommand}"
-                                         ClickCommandParameter="{x:Static enum:EApplicationPage.Settings}"/>
+                                            ContainsSubMenu="False"
+                                            IsMenuSelected="{Binding Page, 
+                                                                     Converter={conv:IsPageTheSameWithParameterConventer}, 
+                                                                     ConverterParameter={x:Static enum:EApplicationPage.Settings}}"
+                                            Header="Settings"
+                                            ClickCommand="{Binding SetPageCommand}"
+                                            ClickCommandParameter="{x:Static enum:EApplicationPage.Settings}"/>
                     
 
                 </StackPanel>

@@ -123,6 +123,17 @@ namespace HotelReservation.Core.Service
         }
 
         /// <summary>
+        /// Method to get view model of hotel
+        /// </summary>
+        /// <param name="id">Id of hotel</param>
+        /// <returns></returns>
+        public Hotel Get(Guid id)
+        {
+            Hotel item = _hotelsRepository.GetById(id);
+            return item;
+        }
+
+        /// <summary>
         /// Method to gel all hotels to list
         /// </summary>
         /// <returns></returns>

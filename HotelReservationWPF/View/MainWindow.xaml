@@ -7,12 +7,14 @@
         xmlns:control="clr-namespace:HotelReservationWPF.Controls"
         xmlns:conv="clr-namespace:HotelReservationWPF.Conventer"
         xmlns:helpers="clr-namespace:HotelReservationWPF.Helper"
+        xmlns:vm="clr-namespace:HotelReservationWPF.ViewModel;assembly=HotelReservationWPF.ViewModel"
         xmlns:enum="clr-namespace:HotelReservation.Models.Enum;assembly=HotelReservation.Models"
         mc:Ignorable="d"
         Name="home"
         Title="MainWindow" Height="650" Width="1000"
         WindowStartupLocation="CenterScreen" WindowStyle="None"
         Background="Transparent" AllowsTransparency="True"
+        d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         FontFamily="Poppins">
     <Border Background="{DynamicResource PrimaryBackgroundColor}"
             CornerRadius="8">
@@ -33,10 +35,45 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
+                <Border Background="{StaticResource PrimaryTextColor}"
+                        Visibility="{Binding Navigation.PageViewModel.IsTaskRunning ,
+                                             Source={x:Static helpers:AppHelper.Instance},
+                                             UpdateSourceTrigger=PropertyChanged,
+                                             Converter={conv:BoolToVisibleConventer}}"
+                        Grid.RowSpan="2"
+                        Opacity=".5">
+                    <TextBlock Text="Wait ..."
+                               Foreground="{StaticResource PrimaryBackgroundColor}"
+                               FontSize="32"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"/>
+                </Border>
+
                 <Grid Grid.Row="0"
                       Background="{DynamicResource PrimaryBackgroundColor}"
                       MouseDown="StackPanel_MouseDown" MouseLeftButtonDown="Grid_MouseLeftButtonDown"
                       >
+                    <StackPanel VerticalAlignment="Top"
+                                HorizontalAlignment="Left">
+                        <Menu IsMainMenu="True">
+                            <MenuItem Header="Rezerwacje">
+                                <MenuItem Header="Lista"
+                                          Command="{Binding SetPageCommand}"
+                                          CommandParameter="{x:Static enum:EApplicationPage.ReservationPage}"/>
+                                <MenuItem Header="Dodaj"
+                                          Command="{Binding SetPageCommand}"
+                                          CommandParameter="{x:Static enum:EApplicationPage.BookPage}"/>
+                            </MenuItem>
+                            <MenuItem Header="Pokoje">
+                                <MenuItem Header="Typy"/>
+                            </MenuItem>
+                            <MenuItem Header="Hotele">
+                                <MenuItem Header="Kategorie"/>
+                            </MenuItem>
+                        </Menu>
+                    </StackPanel>
+                    
+                    
                     <StackPanel HorizontalAlignment="Right" 
                             VerticalAlignment="Top" 
                             Margin="0,5,10,0" 

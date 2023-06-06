@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows;
 using HotelReservation.Core.Helpers;
+using HotelReservationWPF.Dialog;
 using HotelReservationWPF.View;
 using HotelReservationWPF.View.Pages;
 using HotelReservationWPF.ViewModel; 
@@ -65,6 +66,7 @@ namespace HotelReservationWPF
             services.AddSingleton<INavigation, NavigationViewModel>((o) => {
                 return new NavigationViewModel() { AppHost = AppHost };
             });
+            services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IHotelReservationApp,HotelReservationApp>();
         }
 
