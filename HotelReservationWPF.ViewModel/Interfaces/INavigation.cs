@@ -1,5 +1,6 @@
 ﻿using HotelReservation.Models.Enum;
 using HotelReservationWPF.ViewModel.Core;
+using System.Threading.Tasks;
 
 namespace HotelReservationWPF.ViewModel.Interfaces
 {
@@ -9,6 +10,6 @@ namespace HotelReservationWPF.ViewModel.Interfaces
         EUserType UserType { get; }
         IBasePage PageControl { get; }
         BasePageViewModel PageViewModel { get; set; }
-        void SetPage(EApplicationPage page, BasePageViewModel pageViewModel = null);
+        Task SetPage(EApplicationPage page, BasePageViewModel pageViewModel = null);
     }
 }

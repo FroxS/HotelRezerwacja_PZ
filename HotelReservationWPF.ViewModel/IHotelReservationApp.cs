@@ -11,6 +11,7 @@ namespace HotelReservationWPF.ViewModel
         public Guid WorkingHotel { get; }
         EUserType UserType { get; }
         IDialogService DialogService { get; }
+        bool IsTaskRunning { get; set; }
         void Run();
         void Close();
         string GetApplicationPath();

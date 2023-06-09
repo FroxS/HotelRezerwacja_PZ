@@ -103,7 +103,7 @@ namespace HotelReservationWPF.ViewModel.Page
             AddNewCommand = new AsyncRelayCommand((o) => AddNew());
             DeleteCommand = new AsyncRelayCommand((o) => Delete((o as Hotel) == null ? _selectedHotel : (Hotel)o));
             EditCommand = new RelayCommand((o) => IsEditing = true);
-            LoadData();
+           
         }
 
         #endregion
@@ -148,7 +148,7 @@ namespace HotelReservationWPF.ViewModel.Page
             }
         }
 
-        private async Task LoadData()
+        public override async Task LoadAsync()
         {
             var hotels = await _hotelService.GetAllAsync();
             Hotels = new ObservableCollection<Hotel>(hotels);

@@ -126,7 +126,6 @@ namespace HotelReservationWPF.ViewModel.Page
             BookCommand = new AsyncRelayCommand((o) => Book());
             UpdateAviableRoomsCommand = new AsyncRelayCommand((o) => SetAviableRooms());
             Reservation = new ReservationFormViewModel();
-            LoadAsync();
         }
 
 
@@ -134,7 +133,7 @@ namespace HotelReservationWPF.ViewModel.Page
 
         #region Private methods
 
-        private async Task LoadAsync()
+        public override async Task LoadAsync()
         {
             try
             {

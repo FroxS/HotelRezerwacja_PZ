@@ -27,7 +27,7 @@ namespace HotelReservationWPF.ViewModel.Page
         /// </summary>
         public DashBoardPageViewModel(IServiceProvider service): base(service) 
         {
-            GoToPageCommand = new RelayCommand<EApplicationPage>(SetPage);
+            GoToPageCommand = new AsyncRelayCommand<EApplicationPage>(SetPage);
 
             HotelName = _service.GetService<IHotelReservationApp>().GetWorkingHotel().Name;
         }

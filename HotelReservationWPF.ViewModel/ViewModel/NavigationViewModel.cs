@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using HotelReservation.Core.Helpers;
 using System;
+using System.Threading.Tasks;
 
 namespace HotelReservationWPF.ViewModel
 {
@@ -51,7 +52,7 @@ namespace HotelReservationWPF.ViewModel
         public NavigationViewModel(IServiceProvider service)
         {
             _service = service;
-            SetPageCommand = new RelayCommand<EApplicationPage>((o) => { SetPage(o); });
+            SetPageCommand = new AsyncRelayCommand<EApplicationPage>(async (o) => { await SetPage(o); });
             //SetPage(EApplicationPage.RoomsPage);
         }
 
@@ -59,25 +60,39 @@ namespace HotelReservationWPF.ViewModel
 
         #region Public Methods
 
-        public void SetPage(EApplicationPage page, BasePageViewModel pageViewModel = null)
+        public async Task SetPage(EApplicationPage page, BasePageViewModel pageViewModel = null)
         {
-            if (page == Page)
-                return;
+            try
+            {
+                if (page == Page)
+                    return;
 
-            if (!CanChagePage(page))
-                return;
+                if (!CanChagePage(page))
+                    return;
+                _service.GetService<IHotelReservationApp>().IsTaskRunning = true;
 
-            OnPropertyChanging(nameof(Page));
-            OnPropertyChanging(nameof(PageControl));
-            Page = page;
-            var newPageControl = page.ToBasePage(AppHost.Services);
-            if (pageViewModel != null)
-                newPageControl.ViewModelObject = pageViewModel;
-            PageViewModel = newPageControl.ViewModelObject as BasePageViewModel;
-            PageControl = newPageControl;
-           
-            OnPropertyChanged(nameof(Page));
-            OnPropertyChanged(nameof(PageControl));
+                OnPropertyChanging(nameof(Page));
+                OnPropertyChanging(nameof(PageControl));
+                Page = page;
+                var newPageControl = page.ToBasePage(AppHost.Services);
+                if (pageViewModel != null)
+                    newPageControl.ViewModelObject = pageViewModel;
+                PageViewModel = newPageControl.ViewModelObject as BasePageViewModel;
+                await PageViewModel.LoadAsync();
+                PageControl = newPageControl;
+                _service.GetService<IHotelReservationApp>().IsTaskRunning = false;
+                OnPropertyChanged(nameof(Page));
+                OnPropertyChanged(nameof(PageControl));
+            }
+            catch(Exception ex)
+            {
+                _service.GetService<IHotelReservationApp>().IsTaskRunning = false;
+            }
+            finally
+            {
+                _service.GetService<IHotelReservationApp>().IsTaskRunning = false;
+            }
+            
         }
 
 

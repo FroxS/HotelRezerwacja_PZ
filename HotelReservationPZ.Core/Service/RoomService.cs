@@ -142,6 +142,16 @@ namespace HotelReservation.Core.Service
         }
 
         /// <summary>
+        /// Method to get all rooms
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Room>> GetAllAsyncClear()
+        {
+            List<Room> items = await _roomsRepository.GetAllAsync();
+            return items;
+        }
+
+        /// <summary>
         /// Method to get filtred list of room
         /// </summary>
         /// <param name="hotel">Id of hotel</param>

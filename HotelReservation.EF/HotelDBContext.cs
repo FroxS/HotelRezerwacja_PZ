@@ -70,7 +70,7 @@ namespace HotelReservation.EF
         /// <param name="options">Option od db context</param>
         public HotelDBContext(DbContextOptions options) : base(options)
         {
-
+            
         }
 
         #endregion

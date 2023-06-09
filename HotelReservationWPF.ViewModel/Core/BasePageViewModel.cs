@@ -2,8 +2,7 @@
 using HotelReservationWPF.ViewModel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace HotelReservationWPF.ViewModel.Core
 {
@@ -35,17 +34,23 @@ namespace HotelReservationWPF.ViewModel.Core
 
         #region Protected method
 
-        protected void SetPage(EApplicationPage page)
+        protected async Task SetPage(EApplicationPage page)
         {
-            _nav.SetPage(page);
+            await _nav.SetPage(page);
         }
 
-        protected void SetPage(EApplicationPage page,BasePageViewModel pageViewMOdel = null)
+        protected async Task SetPage(EApplicationPage page,BasePageViewModel pageViewMOdel = null)
         {
-            _nav.SetPage(page, pageViewMOdel);
+            await _nav.SetPage(page, pageViewMOdel);
         }
 
         protected bool CanEditRows() => _hotelApp.UserType == (EUserType.Employee | EUserType.Boss);
+
+        #endregion
+
+        #region Public methods
+
+        public virtual Task LoadAsync() { return Task.Delay(0); }
 
         #endregion
 

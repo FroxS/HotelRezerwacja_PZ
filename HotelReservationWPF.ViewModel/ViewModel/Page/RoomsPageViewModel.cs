@@ -128,8 +128,7 @@ namespace HotelReservationWPF.ViewModel.Page
             AddNewCommand = new AsyncRelayCommand((o) => AddNew());
             DeleteCommand = new AsyncRelayCommand((o) => Delete((o as Room) == null ? _selectedRoom : (Room)o));
             EditCommand = new RelayCommand((o) => IsEditing = true);
-            BookCommand = new RelayCommand<Room>(Book);
-            LoadData();
+            BookCommand = new AsyncRelayCommand<Room>(Book);
         }
 
         #endregion
@@ -161,7 +160,7 @@ namespace HotelReservationWPF.ViewModel.Page
             return base.Filter(emp);
         }
 
-        private void Book(Room room)
+        private async Task Book(Room room)
         {
             if (room == null)
                 return;
@@ -171,7 +170,7 @@ namespace HotelReservationWPF.ViewModel.Page
             bookVM.Reservation.StartDate = StartDate.HasValue ? StartDate.Value : DateTime.Now;
             bookVM.Reservation.EndDate = EndDate.HasValue ? EndDate.Value : DateTime.Now.AddDays(1);
 
-            SetPage(HotelReservation.Models.Enum.EApplicationPage.BookPage, bookVM);
+            await SetPage(HotelReservation.Models.Enum.EApplicationPage.BookPage, bookVM);
         }
 
         private async Task AddNew()
@@ -197,9 +196,9 @@ namespace HotelReservationWPF.ViewModel.Page
             }
         }
 
-        private async Task LoadData()
+        public override async Task LoadAsync()
         {
-            var rooms = await _roomService.GetAllAsync();
+            var rooms = await _roomService.GetAllAsyncClear();
             Rooms = new ObservableCollection<Room>(rooms.Where(x => x.HotlelId == _hotelApp.WorkingHotel));
             Collection = CollectionViewSource.GetDefaultView(Rooms);
         }

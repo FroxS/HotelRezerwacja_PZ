@@ -86,7 +86,7 @@ namespace HotelReservationWPF.ViewModel.Page
                 if(await _reservationService.CanelReservation(Reservation.Id))
                 {
                     MessageBox.Show("Udał osię ununąć rezerwacje");
-                    SetPage(HotelReservation.Models.Enum.EApplicationPage.ReservationPage);
+                    await SetPage(HotelReservation.Models.Enum.EApplicationPage.ReservationPage);
                     return;
                 }
                 else

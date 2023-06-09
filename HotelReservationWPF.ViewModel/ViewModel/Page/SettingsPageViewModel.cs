@@ -58,14 +58,13 @@ namespace HotelReservationWPF.ViewModel.Page
         /// </summary>
         public SettingsPageViewModel(IServiceProvider service): base(service) 
         {
-            LoadAsync();
         }
 
         #endregion
 
-        #region Constructors
+        #region Public methods
 
-        private async Task LoadAsync()
+        public override async Task LoadAsync()
         {
             var hotels = await _hotelService.GetAllAsync();
             Hotels = new ObservableCollection<Hotel>(hotels);

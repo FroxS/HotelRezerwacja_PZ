@@ -36,6 +36,8 @@ namespace HotelReservation.Core.Service
         /// <returns></returns>
         Task<IEnumerable<Room>> GetAllAsync();
 
+        Task<IEnumerable<Room>> GetAllAsyncClear();
+
         /// <summary>
         /// Method to update room
         /// </summary>

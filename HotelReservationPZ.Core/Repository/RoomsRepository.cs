@@ -38,6 +38,15 @@ namespace HotelReservation.Core.Repository
         }
 
         /// <summary>
+        /// Method to get all Rooms to list included Types and Room images
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Room>> GetAllClearAsync()
+        {
+            return await context.Rooms.ToListAsync();
+        }
+
+        /// <summary>
         /// Method to get one room from databae by Id included Type and Room images 
         /// </summary>
         /// <param name="id">Id of this room</param>

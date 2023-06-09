@@ -28,7 +28,8 @@
             <!--<local:LefN-->
             <local:LeftNavBarMenu DataContext="{Binding Navigation, 
                                                         Source={x:Static helpers:AppHelper.Instance},
-                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                  />
 
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -44,9 +45,7 @@
                         Grid.RowSpan="2"
                         Opacity=".5">
                     <TextBlock Text="Wait ..."
-                               Foreground="{StaticResource PrimaryBackgroundColor}"
-                               FontSize="32"
-                               VerticalAlignment="Center"
+                               For
                                HorizontalAlignment="Center"/>
                 </Border>-->
 
@@ -102,11 +101,29 @@
                 
                 <!-- End: Button Close | Restore | Minimize -->
 
+                <!--<Grid Grid.Row="1"
+                      Visibility="{Binding Application.IsTaskRunning, 
+                                         Source={x:Static helpers:AppHelper.Instance},
+                                         UpdateSourceTrigger=PropertyChanged
+                                        ,Converter={conv:BoolToVisibleConventer}}"
+                      Panel.ZIndex="1000">
+                    <Border Background="Gray"
+                            Opacity=".5"
+                            >
+                        <TextBlock Text="Ładuje..."
+                                 FontSize="72"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Center"/>
+                    </Border>
+                </Grid>-->
+                
+
                 <Frame Content="{Binding Navigation.PageControl, 
                                          Source={x:Static helpers:AppHelper.Instance},
                                          UpdateSourceTrigger=PropertyChanged}"
                        Grid.Row="1"
-                       NavigationUIVisibility="Hidden"/>
+                       NavigationUIVisibility="Hidden"
+                       />
 
                 <!--<control:PageHost CurrentPage="{Binding Navigation.Page, 
                                                         Source={x:Static helpers:AppHelper.Instance},
