@@ -1,5 +1,5 @@
 # HotelRezerwacja_PZ
-Projekt rezerwacji hoteli na programownie zaawansowane
+Projekt rezerwacji hoteli
 
 PL
 Aby uruchomić program
