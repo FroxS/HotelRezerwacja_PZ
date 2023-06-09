@@ -1,11 +1,10 @@
 ﻿using HotelReservation.Models.Enum;
-using HotelReservationWPF.Controls;
-using HotelReservationWPF.View.Pages;
+using HotelReservationWPF.ViewModel.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics;
 
-namespace HotelReservationWPF.Conventer
+namespace HotelReservationWPF.ViewModel.Core
 {
     public static class AplicationPageConventer
     {
@@ -20,19 +19,19 @@ namespace HotelReservationWPF.Conventer
             switch (page)
             {
                 case EApplicationPage.DashBoard:
-                    return services.GetRequiredService<DashBoardPageView>();
+                    return services.GetRequiredService<IDashBoardPage>();
                 case EApplicationPage.ReservationPage:
-                    return services.GetRequiredService<ReservationsPageView>();
+                    return services.GetRequiredService<IReservationsPage>();
                 case EApplicationPage.RoomsPage:
-                    return services.GetRequiredService<RoomsPageView>();
+                    return services.GetRequiredService<IRoomsPage>();
                 case EApplicationPage.HotelsPage:
-                    return services.GetRequiredService<HotelsPageView>();
+                    return services.GetRequiredService<IHotelsPage>();
                 case EApplicationPage.ReservationDetailsPage:
-                    return services.GetRequiredService<ReservationDetailsPageView>();
+                    return services.GetRequiredService<IReservationDetailsPage>();
                 case EApplicationPage.BookPage:
-                    return services.GetRequiredService<BookPageView>();
+                    return services.GetRequiredService<IBookPage>();
                 case EApplicationPage.Settings:
-                    return services.GetRequiredService<SettingsPageView>();
+                    return services.GetRequiredService<ISettingsPage>();
                 default:
                     Debugger.Break();
                     return null;

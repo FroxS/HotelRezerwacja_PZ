@@ -40,10 +40,9 @@ namespace HotelReservationWPF.ViewModel.Core
             _nav.SetPage(page);
         }
 
-        protected void SetPage(EApplicationPage page,Action<BasePageViewModel> OnPageChaged)
+        protected void SetPage(EApplicationPage page,BasePageViewModel pageViewMOdel = null)
         {
-            SetPage(page);
-            _nav.PageViewModel.OnDataLoaded = OnPageChaged;
+            _nav.SetPage(page, pageViewMOdel);
         }
 
         protected bool CanEditRows() => _hotelApp.UserType == (EUserType.Employee | EUserType.Boss);

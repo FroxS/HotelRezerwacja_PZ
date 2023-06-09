@@ -16,24 +16,25 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelReservationWPF.ViewModel.Page
 {
-    public class RoomViewModel : BaseItemViewModel<Room>
+    public class HotelViewModel : BaseItemViewModel<Hotel>
     {
         #region Private properties
 
-        private ObservableCollection<RoomType> _roomTypes;
+        private ObservableCollection<HotelCategory> _hotelCategories;
         private ObservableCollection<IFormFile> _images;
         private bool _isEditing = false;
+        private ObservableCollection<int> _hours = new ObservableCollection<int>(Enumerable.Range(1,23));
 
         #endregion
 
         #region Public properties
 
-        public ObservableCollection<RoomType> RoomTypes 
+        public ObservableCollection<HotelCategory> HotelCategories
         { 
-            get => _roomTypes;
-            private set { 
-                _roomTypes = value;
-                OnPropertyChanged(nameof(RoomTypes));
+            get => _hotelCategories;
+            private set {
+                _hotelCategories = value;
+                OnPropertyChanged(nameof(HotelCategories));
             }
         }
 
@@ -57,6 +58,16 @@ namespace HotelReservationWPF.ViewModel.Page
             }
         }
 
+        public ObservableCollection<int> Hours
+        {
+            get => _hours;
+            private set
+            {
+                _hours = value;
+                OnPropertyChanged(nameof(Hours));
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -72,16 +83,16 @@ namespace HotelReservationWPF.ViewModel.Page
         /// <summary>
         /// Default constructor
         /// </summary>
-        public RoomViewModel(Room room, IServiceProvider service):base(room,service)
+        public HotelViewModel(Hotel hotel, IServiceProvider service):base(hotel, service)
         { 
             UploadImagesCommad = new RelayCommand((o) => UploadImages());
             EditCommad = new RelayCommand((o) => { ChangeToEdit(); });
+
         }
 
         #endregion
 
         #region Public methods
-
 
         private void ChangeToEdit()
         {
@@ -96,9 +107,9 @@ namespace HotelReservationWPF.ViewModel.Page
 
         public override async Task LoadAsync()
         {
-            RoomTypes = new ObservableCollection<RoomType>(await _service.GetService<IRoomTypeService>().GetAllAsync());
+            HotelCategories = new ObservableCollection<HotelCategory>(await _service.GetService<IHotelCategoryService>().GetAllAsync());
             string appPath = GetApplicationPath();
-            Images = new ObservableCollection<IFormFile>(Item.RoomImages.Select(
+            Images = new ObservableCollection<IFormFile>(Item.Images.Select(
                 x => new CustomFromFile(
                     File.ReadAllBytes(Path.Combine(appPath, x.Path)),
                    Path.Combine(appPath, x.Path)
@@ -107,19 +118,20 @@ namespace HotelReservationWPF.ViewModel.Page
 
         public override async Task SaveAsync()
         {
-            var roomService = _service.GetService<IRoomService>();
-            Item.HotlelId = _service.GetService<IHotelReservationApp>().WorkingHotel;
+            var hotelService = _service.GetService<IHotelService>();
+
             if (Item.Id == Guid.Empty)
             {
-                RoomImageFormViewModel form = new RoomImageFormViewModel(Item);
+                HotelImageFormViewModel form = new HotelImageFormViewModel(Item);
                 form.Images = Images.ToList();
-                var created = await roomService.CreateAsync(form, GetApplicationPath());
+                var created = await hotelService.CreateAsync(form, GetApplicationPath());
                 Item.Id = created.Id;
             }
             else
             {
-                
-                await roomService.UpdateAsync(Item);
+                var itemToUpdate = Item.Clone();
+                itemToUpdate.CategoryId = Guid.Empty;
+                await hotelService.UpdateAsync(Item);
             }
         }
 

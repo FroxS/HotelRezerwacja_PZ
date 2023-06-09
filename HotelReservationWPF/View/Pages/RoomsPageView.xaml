@@ -23,11 +23,19 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="10" >
-            <Button Content="Dodaj"
-                    VerticalAlignment="Center"
+            <Button VerticalAlignment="Center"
                     HorizontalAlignment="Left"
-                    Command="{Binding AddNewCommand}"
-                    Width="50"/>
+                    Height="30"
+                    Name="Searchbtn"
+                    Command="{Binding AddNewCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Path Data="{StaticResource Plus}"
+                          Stretch="Uniform"
+                          Margin="5,0,10,0"
+                          Fill="{Binding Foreground, ElementName=Searchbtn}"/>
+                    <TextBlock Text="Dodaj"/>
+                </StackPanel>
+            </Button>
             <StackPanel VerticalAlignment="Center"
                      HorizontalAlignment="Right"
                         Orientation="Horizontal">
@@ -41,10 +49,10 @@
                 <DatePicker Margin="5"
                             SelectedDate="{Binding EndDate}"
                             />
-                <TextBlock Text="Szukaj:"
-                           VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Width="200"
+                         Tag="Szukaj"
+                         Style="{StaticResource SearchTextBox}"
                      />
             </StackPanel>
 
@@ -55,6 +63,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <DataGrid ItemsSource="{Binding Collection, 
@@ -74,7 +83,7 @@
                                 Path=PlacementTarget.SelectedItem}"/>
                         <MenuItem Header="Szczegóły"
                                   Command="{Binding EditCommand}"/>
-                        <MenuItem Header="Rezerwój"
+                        <MenuItem Header="Rezerwuj"
                                   Command="{Binding BookCommand}"
                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}},
                                 Path=PlacementTarget.SelectedItem}"/>
@@ -99,14 +108,19 @@
                 </i:Interaction.Triggers>
 
             </DataGrid>
-
-            <Grid Grid.Column="1"
+            
+            <GridSplitter Grid.Column="1"  
+                          HorizontalAlignment="Left" 
+                          VerticalAlignment="Stretch"
+                          Background="Black" 
+                          ShowsPreview="true"
+                          Width="2"/>
+            
+            <Grid Grid.Column="2"
                   Margin="10"
                   Visibility="{Binding IsEditing, Converter={conv:BoolToVisibleConventer}, ConverterParameter=True}">
 
-                <roomView:RoomView DataContext="{Binding RoomViewModel}"
-                                   
-                                   MaxWidth="300"/>
+                <roomView:RoomView DataContext="{Binding RoomViewModel}"/>
 
             </Grid>
 

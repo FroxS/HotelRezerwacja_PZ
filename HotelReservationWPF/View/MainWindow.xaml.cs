@@ -51,7 +51,6 @@ namespace HotelReservationWPF.View
                 btnRestore_Click(sender, e);
             }
         }
-        // End: Button Close | Restore | Minimize
 
     }
 }

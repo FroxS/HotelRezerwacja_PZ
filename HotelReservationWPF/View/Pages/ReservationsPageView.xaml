@@ -20,16 +20,29 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="10" >
-            <Button Content="Dodaj"
-                    Command="{Binding AddBookCommad}"
-                    VerticalAlignment="Center"
+            <Button VerticalAlignment="Center"
                     HorizontalAlignment="Left"
-                    Width="50"/>
+                    Height="30"
+                    Name="Searchbtn"
+                    Command="{Binding AddBookCommad}">
+                <StackPanel Orientation="Horizontal">
+                    <Path Data="{StaticResource Plus}"
+                          Stretch="Uniform"
+                          Margin="5,0,10,0"
+                          Fill="{Binding Foreground, ElementName=Searchbtn}"/>
+                    <TextBlock Text="Dodaj"/>
+                </StackPanel>
+            </Button>
+            <StackPanel VerticalAlignment="Center"
+                     HorizontalAlignment="Right">
+                <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Width="200"
+                         Tag="Szukaj"
+                         Style="{StaticResource SearchTextBox}"
+                     />
+            </StackPanel>
 
-            <TextBox Text="{Binding Search}"
-                     Width="200"
-                     VerticalAlignment="Center"
-                     HorizontalAlignment="Right"/>
+            
         </Grid>
 
         <Grid Grid.Row="1">
@@ -42,7 +55,10 @@
                                             NotifyOnSourceUpdated=True,
                                             NotifyOnTargetUpdated=True}"
                       SelectedItem="{Binding SelectedReservation}"
-                      AutoGenerateColumns="False">
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Szczegóły"

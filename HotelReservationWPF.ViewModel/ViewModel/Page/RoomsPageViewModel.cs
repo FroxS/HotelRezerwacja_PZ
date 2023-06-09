@@ -165,14 +165,13 @@ namespace HotelReservationWPF.ViewModel.Page
         {
             if (room == null)
                 return;
-            SetPage(HotelReservation.Models.Enum.EApplicationPage.BookPage, (vm) => {
-                if(vm is BookPageViewModel bookVM)
-                {
-                    bookVM.FilterRoom = (o) => o.Id == room.Id;
-                    bookVM.Reservation.StartDate = StartDate.HasValue ? StartDate.Value : DateTime.Now;
-                    bookVM.Reservation.EndDate = EndDate.HasValue ? EndDate.Value : DateTime.Now.AddDays(1);
-                } 
-            });
+
+            var bookVM = new BookPageViewModel(_service);
+            bookVM.FilterRoom = (o) => o.Id == room.Id;
+            bookVM.Reservation.StartDate = StartDate.HasValue ? StartDate.Value : DateTime.Now;
+            bookVM.Reservation.EndDate = EndDate.HasValue ? EndDate.Value : DateTime.Now.AddDays(1);
+
+            SetPage(HotelReservation.Models.Enum.EApplicationPage.BookPage, bookVM);
         }
 
         private async Task AddNew()

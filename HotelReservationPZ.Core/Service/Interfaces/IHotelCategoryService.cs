@@ -19,5 +19,9 @@ namespace HotelReservation.Core.Service
         /// <param name="id">Id of this category</param>
         /// <returns></returns>
         Task<HotelCategory> GetAsync(Guid id);
+
+        Task<HotelCategory> CreateAsync(HotelCategory hotelCategory);
+
+        Task UpdateAsync(HotelCategory item);
     }
 }

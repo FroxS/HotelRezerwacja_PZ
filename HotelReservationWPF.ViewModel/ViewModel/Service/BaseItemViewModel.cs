@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using HotelReservation.Core.Exeptions;
 using HotelReservationWPF.ViewModel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
@@ -20,7 +19,7 @@ namespace HotelReservationWPF.ViewModel.Service
 
         #region Public properties
 
-        public Entity Room { get; }
+        public Entity Item { get; }
 
         public string Title
         {
@@ -45,11 +44,11 @@ namespace HotelReservationWPF.ViewModel.Service
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BaseItemViewModel(Entity room, IServiceProvider service)
+        public BaseItemViewModel(Entity item, IServiceProvider service)
         {
-            Room = room;
+            Item = item;
             _service = service;
-            SaveCommand = new AsyncRelayCommand((o) => SaveAsync());
+            SaveCommand = new AsyncRelayCommand((o) => SaveAsync(), (o) => { OnSaveExpetion(o); });
             LoadAsync();
         }
 
@@ -81,6 +80,33 @@ namespace HotelReservationWPF.ViewModel.Service
                 return op.FileNames;
             }
             return null;
+        }
+
+        protected void ShowMessage(string message)
+        {
+            _service.GetService<IHotelReservationApp>().DialogService.ShowAlert(message);
+        }
+
+        protected virtual void OnSaveExpetion(Exception exception)
+        {
+            try
+            {
+                throw exception;
+            }
+            catch (ErrorModelExeption ex)
+            {
+                foreach(var message in ex.GetData())
+                {
+                    ShowMessage($"{message.Key}: {message.Value}");
+                }
+                
+            }
+            catch (System.Exception ex)
+            {
+                ShowMessage("Bład podczas zapisywania");
+            }
+
+
         }
 
         #endregion

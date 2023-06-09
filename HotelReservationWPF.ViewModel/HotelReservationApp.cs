@@ -3,6 +3,7 @@ using HotelReservation.Models;
 using HotelReservation.Models.Enum;
 using HotelReservationWPF.ViewModel.Core;
 using HotelReservationWPF.ViewModel.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -38,6 +39,8 @@ namespace HotelReservationWPF.ViewModel
 
         public IDialogService DialogService => _service.GetService<IDialogService>();
 
+        public INavigation Navigation => _service.GetService<INavigation>();
+
         #endregion
 
         #region Constructor
@@ -63,6 +66,7 @@ namespace HotelReservationWPF.ViewModel
 
         public void Run()
         {
+            Navigation.SetPage(EApplicationPage.DashBoard);
             MainWindow.ShowDialog();
         }
 

@@ -23,5 +23,15 @@ namespace HotelReservation.Models
         /// Hotel category hotels list - other table
         /// </summary>
         public List<Hotel> Hotels { get; set; } = new List<Hotel>();
+
+        public HotelCategory Clone()
+        {
+            return new HotelCategory
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Hotels = new List<Hotel>(this.Hotels)
+            };
+        }
     }
 }

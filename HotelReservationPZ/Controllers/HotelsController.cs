@@ -157,7 +157,7 @@ namespace HotelReservation.Controllers
             {
                 try
                 {
-                    await _hotelService.Update(hotel);
+                    await _hotelService.UpdateAsync(hotel);
                 }
                 catch
                 {

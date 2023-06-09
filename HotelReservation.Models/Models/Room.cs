@@ -74,5 +74,24 @@ namespace HotelReservation.Models
         /// </summary>
         public RoomImages MainImage => RoomImages?.Find(x => x.IsMain);
 
+        public Room Clone()
+        {
+            return new Room
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Description = this.Description,
+                Price = this.Price,
+                Discount = this.Discount,
+                MaxQuantityOfPeople = this.MaxQuantityOfPeople,
+                TypeId = this.TypeId,
+                Type = this.Type,
+                HotlelId = this.HotlelId,
+                Hotlel = this.Hotlel,
+                Reservations = new List<Reservation>(this.Reservations),
+                RoomImages = new List<RoomImages>(this.RoomImages)
+            };
+        }
+
     }
 }

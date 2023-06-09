@@ -318,6 +318,8 @@
                                                                      Converter={conv:IsPageTheSameWithParameterConventer}, 
                                                                      ConverterParameter={x:Static enum:EApplicationPage.DashBoard}}"
                                             ClickCommand="{Binding SetPageCommand}"
+                                            Visibility="{Binding UserType, Converter={conv:UserPermisionToVisibleConventer},
+                                                                    ConverterParameter={x:Static enum:EApplicationPage.DashBoard}}"
                                             ClickCommandParameter="{x:Static enum:EApplicationPage.DashBoard}"
                                             Header="Home"/>
 
@@ -327,6 +329,8 @@
                                                                      Converter={conv:IsPageTheSameWithParameterConventer}, 
                                                                      ConverterParameter={x:Static enum:EApplicationPage.ReservationPage}}"
                                             Header="Rezerwacje"
+                                            Visibility="{Binding UserType, Converter={conv:UserPermisionToVisibleConventer},
+                                                                    ConverterParameter={x:Static enum:EApplicationPage.ReservationPage}}"
                                             ClickCommand="{Binding SetPageCommand}"
                                             ClickCommandParameter="{x:Static enum:EApplicationPage.ReservationPage}"/>
 
@@ -336,15 +340,31 @@
                                             IsMenuSelected="{Binding Page, 
                                                                      Converter={conv:IsPageTheSameWithParameterConventer}, 
                                                                      ConverterParameter={x:Static enum:EApplicationPage.RoomsPage}}"
+                                            Visibility="{Binding UserType, Converter={conv:UserPermisionToVisibleConventer},
+                                                                    ConverterParameter={x:Static enum:EApplicationPage.RoomsPage}}"
                                             Header="Pokoje"
                                             ClickCommand="{Binding SetPageCommand}"
                                             ClickCommandParameter="{x:Static enum:EApplicationPage.RoomsPage}"/>
+
+                    <control:ItemMenuButton IconPath="{StaticResource Hotel}"
+                                            ContainsSubMenu="False"
+                                            
+                                            IsMenuSelected="{Binding Page, 
+                                                                     Converter={conv:IsPageTheSameWithParameterConventer}, 
+                                                                     ConverterParameter={x:Static enum:EApplicationPage.HotelsPage}}"
+                                            Header="Hotele"
+                                            Visibility="{Binding UserType, Converter={conv:UserPermisionToVisibleConventer},
+                                                                    ConverterParameter={x:Static enum:EApplicationPage.HotelsPage}}"
+                                            ClickCommand="{Binding SetPageCommand}"
+                                            ClickCommandParameter="{x:Static enum:EApplicationPage.HotelsPage}"/>
 
                     <control:ItemMenuButton IconPath="{StaticResource SettingsGeometry}"
                                             ContainsSubMenu="False"
                                             IsMenuSelected="{Binding Page, 
                                                                      Converter={conv:IsPageTheSameWithParameterConventer}, 
                                                                      ConverterParameter={x:Static enum:EApplicationPage.Settings}}"
+                                            Visibility="{Binding UserType, Converter={conv:UserPermisionToVisibleConventer},
+                                                                    ConverterParameter={x:Static enum:EApplicationPage.Settings}}"
                                             Header="Settings"
                                             ClickCommand="{Binding SetPageCommand}"
                                             ClickCommandParameter="{x:Static enum:EApplicationPage.Settings}"/>

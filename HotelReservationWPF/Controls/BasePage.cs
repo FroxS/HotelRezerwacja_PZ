@@ -1,11 +1,7 @@
 ﻿using HotelReservationWPF.ViewModel.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using HotelReservationWPF.ViewModel.Interfaces;
 
 namespace HotelReservationWPF.Controls
 {

@@ -64,7 +64,7 @@ namespace HotelReservationWPF
         {
             services.AddSingleton<Application>((o) => { return this; });
             services.AddSingleton<INavigation, NavigationViewModel>((o) => {
-                return new NavigationViewModel() { AppHost = AppHost };
+                return new NavigationViewModel(o) { AppHost = AppHost };
             });
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IHotelReservationApp,HotelReservationApp>();
@@ -73,13 +73,13 @@ namespace HotelReservationWPF
         private void PrepareViews(IServiceCollection services)
         {
             services.AddTransient<IMainWindow, MainWindow>();
-            services.AddTransient<DashBoardPageView>();
-            services.AddTransient<HotelsPageView>();
-            services.AddTransient<ReservationsPageView>();
-            services.AddTransient<RoomsPageView>();
-            services.AddTransient<ReservationDetailsPageView>();
-            services.AddTransient<BookPageView>();
-            services.AddTransient<SettingsPageView>();
+            services.AddTransient<IDashBoardPage, DashBoardPageView>();
+            services.AddTransient<IHotelsPage, HotelsPageView>();
+            services.AddTransient<IReservationsPage, ReservationsPageView>();
+            services.AddTransient<IRoomsPage, RoomsPageView>();
+            services.AddTransient<IReservationDetailsPage, ReservationDetailsPageView>();
+            services.AddTransient<IBookPage, BookPageView>();
+            services.AddTransient<ISettingsPage, SettingsPageView>();
         }
 
         private void PrepareViewModels(IServiceCollection services)

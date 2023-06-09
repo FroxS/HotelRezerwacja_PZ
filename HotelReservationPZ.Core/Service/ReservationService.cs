@@ -284,13 +284,22 @@ namespace HotelReservation.Core.Service
             return true;
         }
 
-
-
         /// <summary>
         /// Method to take all reservations
         /// </summary>
         /// <returns>All reservations</returns>
         public async Task<List<Reservation>> GetReservations() => await _reservationRepository.GetAllAsync();
+
+        /// <summary>
+        /// Method to take all reservations
+        /// </summary>
+        /// <returns>All reservations</returns>
+        public async Task<List<Reservation>> GetReservations(Guid hotelid) 
+        { 
+            var reservaiosns =  await _reservationRepository.GetAllAsync();
+            reservaiosns = reservaiosns.Where(x => x.Rooms.FirstOrDefault(x => x.HotlelId == hotelid) != null).ToList();
+            return reservaiosns;
+        }
 
         /// <summary>
         /// Method to take all reservations

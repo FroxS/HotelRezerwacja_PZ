@@ -21,5 +21,15 @@ namespace HotelReservation.Models
         /// List of rooms - other table
         /// </summary>
         public List<Room> Rooms { get; set; } = new List<Room>();
+
+        public RoomType Clone()
+        {
+            return new RoomType
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Rooms = new List<Room>(this.Rooms)
+            };
+        }
     }
 }

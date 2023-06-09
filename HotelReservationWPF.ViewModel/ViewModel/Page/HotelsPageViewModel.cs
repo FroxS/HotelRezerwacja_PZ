@@ -1,9 +1,9 @@
 ﻿using HotelReservation.Core.Service;
-using HotelReservation.Core.ViewModels;
 using HotelReservation.Models;
 using HotelReservationWPF.ViewModel.Core;
 using HotelReservationWPF.ViewModel.Service;
-using Microsoft.Extensions.DependencyInjection;using System;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -15,10 +15,10 @@ namespace HotelReservationWPF.ViewModel.Page
     {
         #region Private properties
 
-        private readonly IRoomService _roomService;
+        private readonly IHotelService _hotelService;
         private Hotel _selectedHotel;
         private bool _isEditing = false;
-        private HotelListViewModel _hotelViewModel;
+        private HotelViewModel _hotelViewModel;
         private ObservableCollection<Hotel> _hotels;
 
         #endregion
@@ -43,24 +43,25 @@ namespace HotelReservationWPF.ViewModel.Page
                 IsEditing = false;
                 if (HotelViewModel != null)
                 {
-                    //Hottel.SaveAsync().ContinueWith((o) => {
-                    //    _selectedHotel = value;
-                    //    OnPropertyChanged(nameof(SelectedRoom));
-                    //    if (_selectedHotel != null)
-                    //        RoomViewModel = new HotelListViewModel(_selectedHotel, _service) { Title = $"Edycja - {_selectedRoom.Name}" };
-                    //});
+                    HotelViewModel.SaveAsync().ContinueWith((o) =>
+                    {
+                        _selectedHotel = value;
+                        OnPropertyChanged(nameof(SelectedHotel));
+                        if (_selectedHotel != null)
+                            HotelViewModel = new HotelViewModel(_selectedHotel, _service) { Title = $"Edycja - {_selectedHotel.Name}" };
+                    });
                 }
                 else
                 {
-                    //_selectedRoom = value;
-                    //OnPropertyChanged(nameof(SelectedRoom));
-                    //if (_selectedRoom != null)
-                    //    RoomViewModel = new HotelListViewModel(_selectedRoom, _service) { Title = $"Edycja - {_selectedRoom.Name}" };
+                    _selectedHotel = value;
+                    OnPropertyChanged(nameof(SelectedHotel));
+                    if (_selectedHotel != null)
+                        HotelViewModel = new HotelViewModel(_selectedHotel, _service) { Title = $"Edycja - {_selectedHotel.Name}" };
                 }
             }
         }
 
-        public HotelListViewModel HotelViewModel
+        public HotelViewModel HotelViewModel
         {
             get => _hotelViewModel;
             set
@@ -98,7 +99,7 @@ namespace HotelReservationWPF.ViewModel.Page
         /// </summary>
         public HotelsPageViewModel(IServiceProvider service) : base(service)
         {
-            _roomService = service.GetService<IRoomService>();
+            _hotelService = service.GetService<IHotelService>();
             AddNewCommand = new AsyncRelayCommand((o) => AddNew());
             DeleteCommand = new AsyncRelayCommand((o) => Delete((o as Hotel) == null ? _selectedHotel : (Hotel)o));
             EditCommand = new RelayCommand((o) => IsEditing = true);
@@ -111,15 +112,13 @@ namespace HotelReservationWPF.ViewModel.Page
 
         protected override bool Filter(object emp)
         {
-            if (emp is Room room)
+            if (emp is Hotel hotel)
             {
                 bool flag = true;
                 if (!string.IsNullOrWhiteSpace(Search))
                 {
-                    flag = flag && room.Name.ToLower().Contains(Search.ToLower());
+                    flag = flag && hotel.Name.ToLower().Contains(Search.ToLower());
                 }
-
-                flag = flag && room.HotlelId == _hotelApp.WorkingHotel;
                 return flag;
             }
 
@@ -130,13 +129,13 @@ namespace HotelReservationWPF.ViewModel.Page
         {
             var created = new Hotel();
 
-            //if (HotelViewModel != null)
-            //    await HotelViewModel.SaveAsync();
+            if (HotelViewModel != null)
+                await HotelViewModel.SaveAsync();
 
             Hotels.Add(created);
             _selectedHotel = created;
-            HotelViewModel = new HotelListViewModel() {};
-            OnPropertyChanged(nameof(HotelViewModel));
+            HotelViewModel = new HotelViewModel(created, _service) { Title = "Dodaj nowy hotel", IsEditing = true };
+            OnPropertyChanged(nameof(SelectedHotel));
         }
 
         private async Task Delete(Hotel hotel)
@@ -144,15 +143,15 @@ namespace HotelReservationWPF.ViewModel.Page
             var guid = hotel?.Id ?? Guid.Empty;
             if (guid != Guid.Empty)
             {
-                await _roomService.DeleteAsync(guid);
+                await _hotelService.DeleteAsync(guid);
                 Hotels.Remove(_selectedHotel);
             }
         }
 
         private async Task LoadData()
         {
-            var rooms = await _roomService.GetAllAsync();
-            Hotels = new ObservableCollection<Hotel>(_hotels);
+            var hotels = await _hotelService.GetAllAsync();
+            Hotels = new ObservableCollection<Hotel>(hotels);
             Collection = CollectionViewSource.GetDefaultView(Hotels);
         }
 

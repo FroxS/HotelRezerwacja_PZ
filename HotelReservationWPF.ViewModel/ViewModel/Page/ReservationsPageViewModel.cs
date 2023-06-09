@@ -96,7 +96,7 @@ namespace HotelReservationWPF.ViewModel.Page
 
         private async Task LoadReservations()
         {
-            var resertations = await _reservationService.GetReservations();
+            var resertations = await _reservationService.GetReservations(_hotelApp.WorkingHotel);
             Reservations = new ObservableCollection<Reservation>(resertations);
         }
 

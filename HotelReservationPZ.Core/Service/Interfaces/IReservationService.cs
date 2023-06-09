@@ -43,5 +43,7 @@ namespace HotelReservation.Core.Service
         Task<List<Reservation>> GetReservations();
 
         Task<bool> CanelReservation(Guid id);
+
+        Task<List<Reservation>> GetReservations(Guid hotelid);
     }
 }

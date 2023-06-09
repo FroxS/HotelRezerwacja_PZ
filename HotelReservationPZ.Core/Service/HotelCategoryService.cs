@@ -53,6 +53,37 @@ namespace HotelReservation.Core.Service
             return await _hotelCategoryRepository.GetAllAsync();
         }
 
+        /// <summary>
+        /// Method to create a Room
+        /// </summary>
+        /// <param name="form">Created room</param>
+        /// <param name="wwwpath">Path to savea a image</param>
+        /// <returns></returns>
+        public async Task<HotelCategory> CreateAsync(HotelCategory hotelCategory)
+        {
+
+            if (hotelCategory == null) throw new DataExeption("Typ jest pusty");
+
+            if (string.IsNullOrEmpty(hotelCategory.Name)) throw new ErrorModelExeption(nameof(RoomImageFormViewModel.Name), "Brak nazwy typu");
+
+            hotelCategory.Id = hotelCategory.Id == Guid.Empty ? Guid.NewGuid() : hotelCategory.Id;
+
+            await _hotelCategoryRepository.InsertAsync(hotelCategory);
+            await _hotelCategoryRepository.SaveAsync();
+            return hotelCategory;
+        }
+
+        /// <summary>
+        /// Method to update room
+        /// </summary>
+        /// <param name="item">Room to update</param>
+        /// <returns></returns>
+        public async Task UpdateAsync(HotelCategory item)
+        {
+            _hotelCategoryRepository.Update(item);
+            await _hotelCategoryRepository.SaveAsync();
+        }
+
         #endregion
 
     }

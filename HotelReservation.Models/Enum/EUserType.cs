@@ -4,8 +4,9 @@ namespace HotelReservation.Models.Enum
 {
     public enum EUserType
     {
-        Admin,
-        Employee,
-        Boss
+        None = 0,
+        Admin = 1,
+        Employee = 2,
+        Boss = 4,
     }
 }

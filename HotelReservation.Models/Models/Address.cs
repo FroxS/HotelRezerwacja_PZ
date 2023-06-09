@@ -39,5 +39,18 @@ namespace HotelReservation.Models
         /// </summary>
         public string City { get; set; }
 
+
+        public Address Clone()
+        {
+            return new Address
+            {
+                Id = this.Id,
+                Country = this.Country,
+                Street = this.Street,
+                StreetNumber = this.StreetNumber,
+                ZipCode = this.ZipCode,
+                City = this.City
+            };
+        }
     }
 }

@@ -49,7 +49,7 @@ namespace HotelReservation.Core.Service
 
             if (hotel.Images == null) throw new DataExeption("Brak zdjęć");
 
-            if (hotel.Images.Count < 3) throw new ErrorModelExeption(nameof(Hotel.Images), "Minimalna liczba zdjęć hotelu to 3");
+            if (hotel.Images.Count < 1) throw new ErrorModelExeption(nameof(Hotel.Images), "Minimalna liczba zdjęć hotelu to 1");
 
             if (hotel.CategoryId == Guid.Empty) throw new ErrorModelExeption(nameof(Hotel.Category), "Nie wybrano kategori");
 
@@ -233,7 +233,7 @@ namespace HotelReservation.Core.Service
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public async Task Update(Hotel item)
+        public async Task UpdateAsync(Hotel item)
         {
             _hotelsRepository.Update(item);
             await _hotelsRepository.SaveAsync();

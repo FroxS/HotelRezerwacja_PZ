@@ -45,7 +45,7 @@ namespace HotelReservation.Core.Service
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task Update(Hotel item);
+        Task UpdateAsync(Hotel item);
 
         /// <summary>
         /// Methof to get only hotels

@@ -1,16 +1,23 @@
-﻿using HotelReservation.Models.Enum;
+﻿using HotelReservation.Models.Attributes;
+using HotelReservation.Models.Enum;
 using HotelReservation.Models.WPFModel;
 using HotelReservationWPF.ViewModel.Core;
 using HotelReservationWPF.ViewModel.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using HotelReservation.Core.Helpers;
+using System;
 
 namespace HotelReservationWPF.ViewModel
 {
     public class NavigationViewModel : BaseViewModel, INavigation
     {
+
         #region Private properties
+
+        private readonly IServiceProvider _service;
 
         #endregion
 
@@ -22,7 +29,11 @@ namespace HotelReservationWPF.ViewModel
 
         public BasePageViewModel PageViewModel { get; set; }
 
+        public EUserType UserType => _service.GetService<IHotelReservationApp>().UserType;
+
         public ObservableCollection<NavItem> NavItems { get; protected set; }
+
+        public IBasePage PageControl { get; private set; }
 
         #endregion
 
@@ -37,10 +48,11 @@ namespace HotelReservationWPF.ViewModel
         /// <summary>
         /// Default constructor
         /// </summary>
-        public NavigationViewModel()
+        public NavigationViewModel(IServiceProvider service)
         {
+            _service = service;
             SetPageCommand = new RelayCommand<EApplicationPage>((o) => { SetPage(o); });
-            SetPage(EApplicationPage.RoomsPage);
+            //SetPage(EApplicationPage.RoomsPage);
         }
 
         #endregion
@@ -51,10 +63,37 @@ namespace HotelReservationWPF.ViewModel
         {
             if (page == Page)
                 return;
-            pageViewModel = null;
+
+            if (!CanChagePage(page))
+                return;
+
             OnPropertyChanging(nameof(Page));
+            OnPropertyChanging(nameof(PageControl));
             Page = page;
+            var newPageControl = page.ToBasePage(AppHost.Services);
+            if (pageViewModel != null)
+                newPageControl.ViewModelObject = pageViewModel;
+            PageViewModel = newPageControl.ViewModelObject as BasePageViewModel;
+            PageControl = newPageControl;
+           
             OnPropertyChanged(nameof(Page));
+            OnPropertyChanged(nameof(PageControl));
+        }
+
+
+        private bool CanChagePage(EApplicationPage page)
+        {
+            EUserType userTpye = UserType;
+            var permision = page.GetAttributeOfType<PermisionAttribute>();
+            if (permision != null)
+            {
+                if ((permision.Type & userTpye) != userTpye)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #endregion

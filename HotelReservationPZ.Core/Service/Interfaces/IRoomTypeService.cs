@@ -19,5 +19,8 @@ namespace HotelReservation.Core.Service
         /// <param name="id">Id of room</param>
         /// <returns></returns>
         Task<RoomType> GetAsync(Guid id);
+
+        Task<RoomType> CreateAsync(RoomType roomType);
+        Task UpdateAsync(RoomType item);
     }
 }

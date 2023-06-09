@@ -67,5 +67,20 @@ namespace HotelReservation.Core.ViewModels
         /// </summary>
         [Required(ErrorMessage = "Wybierz zdjęcia, minimum 3")]
         public List<IFormFile> Images { get; set; }
+
+        public HotelImageFormViewModel() { }
+
+        public HotelImageFormViewModel(Hotel hotel) : this()
+        {
+            Name = hotel.Name;
+            Description = hotel.Description;
+            City = hotel.City;
+            IsActive = hotel.IsActive;
+            HoursCheckOutFrom = hotel.HoursCheckOutFrom;
+            HoursCheckOutTo = hotel.HoursCheckOutTo;
+            HoursCheckInFrom = hotel.HoursCheckInFrom;
+            HoursCheckInTo = hotel.HoursCheckInTo;
+            CategoryId = hotel.Category == null ? hotel.CategoryId : hotel.Category.Id;
+        }
     }
 }

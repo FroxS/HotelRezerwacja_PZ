@@ -58,8 +58,8 @@ namespace HotelReservation.Core.ViewModels
             Description = room.Description;
             Price = room.Price;
             MaxQuantityOfPeople = room.MaxQuantityOfPeople;
-            TypeId = room.Type.Id == Guid.Empty ? room.TypeId : room.Type.Id;
-            HotlelId = room.Hotlel.Id == Guid.Empty ? room.HotlelId : room.Hotlel.Id;
+            TypeId =(room?.Type?.Id ?? Guid.Empty) == Guid.Empty ? room.TypeId : room.Type.Id;
+            HotlelId = (room?.Hotlel?.Id ?? Guid.Empty) == Guid.Empty ? room.HotlelId : room.Hotlel.Id;
         }
 
     }

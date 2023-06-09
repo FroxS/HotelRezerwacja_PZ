@@ -11,9 +11,10 @@
         xmlns:enum="clr-namespace:HotelReservation.Models.Enum;assembly=HotelReservation.Models"
         mc:Ignorable="d"
         Name="home"
-        Title="MainWindow" Height="650" Width="1000"
-        WindowStartupLocation="CenterScreen" WindowStyle="None"
-        Background="Transparent" AllowsTransparency="True"
+        Title="MainWindow" Height="650" Width="1200"
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None"        
+        Background="Transparent" 
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         FontFamily="Poppins">
     <Border Background="{DynamicResource PrimaryBackgroundColor}"
@@ -35,7 +36,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Background="{StaticResource PrimaryTextColor}"
+                <!--<Border Background="{StaticResource PrimaryTextColor}"
                         Visibility="{Binding Navigation.PageViewModel.IsTaskRunning ,
                                              Source={x:Static helpers:AppHelper.Instance},
                                              UpdateSourceTrigger=PropertyChanged,
@@ -47,13 +48,13 @@
                                FontSize="32"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"/>
-                </Border>
+                </Border>-->
 
                 <Grid Grid.Row="0"
                       Background="{DynamicResource PrimaryBackgroundColor}"
                       MouseDown="StackPanel_MouseDown" MouseLeftButtonDown="Grid_MouseLeftButtonDown"
                       >
-                    <StackPanel VerticalAlignment="Top"
+                    <!--<StackPanel VerticalAlignment="Top"
                                 HorizontalAlignment="Left">
                         <Menu IsMainMenu="True">
                             <MenuItem Header="Rezerwacje">
@@ -71,7 +72,7 @@
                                 <MenuItem Header="Kategorie"/>
                             </MenuItem>
                         </Menu>
-                    </StackPanel>
+                    </StackPanel>-->
                     
                     
                     <StackPanel HorizontalAlignment="Right" 
@@ -101,10 +102,16 @@
                 
                 <!-- End: Button Close | Restore | Minimize -->
 
-                <control:PageHost CurrentPage="{Binding Navigation.Page, 
+                <Frame Content="{Binding Navigation.PageControl, 
+                                         Source={x:Static helpers:AppHelper.Instance},
+                                         UpdateSourceTrigger=PropertyChanged}"
+                       Grid.Row="1"
+                       NavigationUIVisibility="Hidden"/>
+
+                <!--<control:PageHost CurrentPage="{Binding Navigation.Page, 
                                                         Source={x:Static helpers:AppHelper.Instance},
                                                         UpdateSourceTrigger=PropertyChanged}"
-                                  Grid.Row="1"/>
+                                  Grid.Row="1"/>-->
             </Grid>
         </Grid>
     </Border>

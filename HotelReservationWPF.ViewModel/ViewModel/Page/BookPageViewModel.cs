@@ -200,12 +200,10 @@ namespace HotelReservationWPF.ViewModel.Page
                 var reserwation = await _reservationService.BookAsync(Reservation);
 
                 MessageBox.Show("Udało się zrobić rezerwację!");
-                SetPage(EApplicationPage.ReservationPage, (pageVM) => {
-                    if(pageVM is ReservationsPageViewModel reservationVM)
-                    {
-                        //reservationVM.SelectedReservation = reservationVM.Reservations.FirstOrDefault(x => x.Id == reserwation.Id);
-                    }
-                });
+                var reservationVM = new ReservationsPageViewModel(_service);
+                reservationVM.SelectedReservation = reservationVM.Reservations.FirstOrDefault(x => x.Id == reserwation.Id);
+
+                SetPage(EApplicationPage.ReservationPage, reservationVM);
 
 
             }
