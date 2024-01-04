@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using HotelReservation.Core.ViewModels;
 using HotelReservation.Core.Service;
 using HotelReservation.Core.Exeptions;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace HotelReservation.Controllers
 {
@@ -106,6 +109,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="id">Id of room</param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(Guid? id)
         {
             try
@@ -126,6 +130,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="hotel">Index of hotel</param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Guid hotel)
         {
 
@@ -133,7 +138,7 @@ namespace HotelReservation.Controllers
                 return NotFound();
 
             ViewData["HotlelId"] = hotel;
-            ViewData["TypeId"] = getRoomTypeListAsync();
+            ViewData["TypeId"] = await getRoomTypeListAsync();
             return View();
         }
 
@@ -145,6 +150,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Name,Description,Price,MaxQuantityOfPeople,TypeId,HotlelId,Images")] RoomImageFormViewModel form)
         {
             try
@@ -166,7 +172,7 @@ namespace HotelReservation.Controllers
                 {
                     ModelState.AddModelError(er.Key, er.Value);
                 }
-                ViewData["TypeId"] = getRoomTypeListAsync(form.TypeId);
+                ViewData["TypeId"] = await getRoomTypeListAsync(form.TypeId);
                 return View(form);
             }
             
@@ -178,6 +184,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="id">Id of this room</param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -187,7 +194,9 @@ namespace HotelReservation.Controllers
             if (room == null)
                 return NotFound();
 
-            ViewData["TypeId"] = getRoomTypeListAsync(room.TypeId);
+            ViewData["TypeId"] = await getRoomTypeListAsync(room.TypeId);
+            ViewData["Hotels"] = new SelectList(await _hotelservice.GetAllAsync(), "Id", "Name");
+
             return View(room);
         }
 
@@ -200,6 +209,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Price,MaxQuantityOfPeople,TypeId,HotlelId")] Room room)
         {
             if (id != room.Id)
@@ -218,7 +228,7 @@ namespace HotelReservation.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TypeId"] = getRoomTypeListAsync(room.TypeId);
+            ViewData["TypeId"] = await getRoomTypeListAsync(room.TypeId);
             return View(room);
         }
 
@@ -229,6 +239,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="id">Id of room</param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -249,6 +260,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _roomService.DeleteAsync(id);
@@ -271,10 +283,20 @@ namespace HotelReservation.Controllers
                 return NotFound();
 
             initDataFroReservation();
+            
             ViewData["Price"] = room.Price;
             ViewBag.RoomId = id;
             ViewData["RoomImages"] = room.Images;
-            return View();
+
+            IdentityUser user = this?.User?.Identity as IdentityUser;
+            ReservationFormViewModel reservation = new ReservationFormViewModel();
+            if(user != null)
+            {
+                reservation.FirstName = user.UserName;
+                reservation.Email = user.Email;
+                reservation.Phone= user.PhoneNumber;
+            }
+            return View(reservation);
         }
 
         /// <summary>
@@ -354,6 +376,8 @@ namespace HotelReservation.Controllers
             else
                 return new SelectList(await _roomTypeService.GetAllAsync(), "Id", "Name");
         }
+
+
 
         #endregion
 

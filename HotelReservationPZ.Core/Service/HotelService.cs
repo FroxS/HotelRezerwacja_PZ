@@ -147,7 +147,7 @@ namespace HotelReservation.Core.Service
                 Category = item.Category.Name,
                 Prices = getPries(item.Rooms),
                 City = item.City,
-                Image = item.MainImage.Path
+                Image = item?.MainImage?.Path
             };
         }
 
@@ -166,7 +166,7 @@ namespace HotelReservation.Core.Service
                     Category = item.Category.Name,
                     Prices = getPries(item.Rooms),
                     City = item.City,
-                    Image = item.MainImage.Path
+                    Image = item?.MainImage?.Path
                 }
                 ).ToList();
             return items;
@@ -201,13 +201,15 @@ namespace HotelReservation.Core.Service
         /// <returns></returns>
         public async Task<IEnumerable<HotelHomeListViewModel>> GetForHomeListAsync(int max = 5)
         {
-            return (await _hotelsRepository.GetAllAsync()).Select(x => new HotelHomeListViewModel() {
+
+            IEnumerable<Hotel> items = await _hotelsRepository.GetAllAsync();
+            return items.Select(x => new HotelHomeListViewModel() {
                 Id = x.Id,
                 Name = x.Name,
                 Category = x.Category.Name,
                 Prices = getPries(x.Rooms),
                 City = x.City,
-                Image = x.MainImage.Path
+                Image = x?.MainImage?.Path
             }).Take(max);
         }
 

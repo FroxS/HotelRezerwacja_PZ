@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using HotelReservation.Models;
 using Microsoft.AspNetCore.Hosting;
 using HotelReservation.Core.ViewModels;
 using HotelReservation.Core.Service;
 using HotelReservation.Core.Exeptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservation.Controllers
 {
@@ -67,6 +67,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="id">Index of this hotel</param>
         /// <returns></returns>
+        [Authorize(Roles = "")]
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null) return NotFound();
@@ -83,6 +84,7 @@ namespace HotelReservation.Controllers
         /// GET: Hotels/Create
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewData["CategoryId"] = await getHootelCategoryListAsync();
@@ -97,6 +99,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Name,Description,City,IsActive,CategoryId,Images")] HotelImageFormViewModel hotel)
         {
             try
@@ -130,6 +133,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="id">Id of this hotel</param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null) return NotFound();
@@ -149,6 +153,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,City,IsActive,CategoryId")] Hotel hotel)
         {
             if (id != hotel.Id) return NotFound();
@@ -176,6 +181,7 @@ namespace HotelReservation.Controllers
         /// </summary>
         /// <param name="id">Id of this hotel</param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null) return NotFound();
@@ -194,6 +200,7 @@ namespace HotelReservation.Controllers
         /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             await _hotelService.DeleteAsync(id);

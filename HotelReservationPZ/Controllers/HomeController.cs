@@ -1,4 +1,6 @@
 ﻿using HotelReservation.Core.Service;
+using HotelReservation.EF;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ namespace HotelReservationPZ.Controllers
         /// service for hotel
         /// </summary>
         private readonly IHotelService _hotelService;
+        private readonly HotelDBContext _context;
 
         #endregion
 
@@ -22,9 +25,10 @@ namespace HotelReservationPZ.Controllers
         /// Default constructor
         /// </summary>
         /// <param name="hotelService">Service for hotel</param>
-        public HomeController(IHotelService hotelService)
+        public HomeController(IHotelService hotelService, HotelDBContext context)
         {
-            _hotelService = hotelService; ;
+            _hotelService = hotelService;
+            _context = context;
         }
 
         #endregion
@@ -37,6 +41,9 @@ namespace HotelReservationPZ.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Index()
         {
+
+            var userRoles = _context.UserRoles;
+
             ViewData["HotelsTop3"] = (await _hotelService.GetTopAsync(3)).ToList();
             return View(await _hotelService.GetForHomeListAsync());
         }

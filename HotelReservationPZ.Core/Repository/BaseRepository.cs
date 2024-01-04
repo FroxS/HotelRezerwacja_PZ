@@ -80,7 +80,8 @@ namespace HotelReservation.Core.Repository
         public async virtual Task DeleteAsync(Guid id)
         {
             T task = await GetByIdAsync(id);
-            context.Set<T>().Remove(task);
+            var test = context.Set<T>().Remove(task);
+
         }
 
         /// <summary>

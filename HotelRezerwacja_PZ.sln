@@ -18,9 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.TestUnit", "Hotel.TestUnit\Hotel.TestUnit.csproj", "{70DD8A0A-E506-4B49-A845-269932896DAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationWPF", "HotelReservationWPF\HotelReservationWPF.csproj", "{830E44DC-69A2-488A-8660-22EEF011BC43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelReservationWPF", "HotelReservationWPF\HotelReservationWPF.csproj", "{830E44DC-69A2-488A-8660-22EEF011BC43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelReservationWPF.ViewModel", "HotelReservationWPF.ViewModel\HotelReservationWPF.ViewModel.csproj", "{3B798D4F-A090-4399-B655-806842D7A88C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelReservationWPF.ViewModel", "HotelReservationWPF.ViewModel\HotelReservationWPF.ViewModel.csproj", "{3B798D4F-A090-4399-B655-806842D7A88C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

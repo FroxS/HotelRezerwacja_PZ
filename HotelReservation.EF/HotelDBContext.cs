@@ -1,9 +1,12 @@
 ﻿using HotelReservation.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelReservation.EF
 {
-    public class HotelDBContext : DbContext
+
+
+    public class HotelDBContext : IdentityDbContext//DbContext
     {
         #region Public properties
 
@@ -59,18 +62,23 @@ namespace HotelReservation.EF
         /// <summary>
         /// Deafult constructor
         /// </summary>
-        public HotelDBContext() : base()
-        {
+        //public HotelDBContext() : base()
+        //{
 
-        }
+        //}
 
-        /// <summary>
-        /// Constructor with option
-        /// </summary>
-        /// <param name="options">Option od db context</param>
-        public HotelDBContext(DbContextOptions options) : base(options)
-        {
+        ///// <summary>
+        ///// Constructor with option
+        ///// </summary>
+        ///// <param name="options">Option od db context</param>
+        //public HotelDBContext(DbContextOptions options) : base(options)
+        //{
             
+        //}
+
+        public HotelDBContext(DbContextOptions<HotelDBContext> options)
+            : base(options)
+        {
         }
 
         #endregion
@@ -83,7 +91,7 @@ namespace HotelReservation.EF
         /// <param name="modelBuilder">Model builder</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<HotelCategory>(hc =>
             {
                 hc.HasKey(x => x.Id);

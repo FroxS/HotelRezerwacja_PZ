@@ -1,4 +1,9 @@
-﻿@model IEnumerable<HotelReservation.Core.ViewModels.HotelListViewModel>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInMenager
+@inject UserManager<IdentityUser> UserMenager
+
+@model IEnumerable<HotelReservation.Core.ViewModels.HotelListViewModel>
 
 <div class="container mt-5">
 
@@ -28,10 +33,15 @@
                                     </div>
                                 </div>
 
-                                <div class="col-3  my-3 align-items-center">
+                                <div class="col-3 my-3 align-items-center d-flex justify-content-between">
                                     <button type="button" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
                                         Szukaj
                                     </button>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a class="nav-link text-white" asp-area="" asp-controller="Hotels" asp-action="Create">+</a>
+                                    }
+                                    
                                 </div>
                             </div>
                         </form>
@@ -68,16 +78,35 @@
                                                     {
                                                         @Html.DisplayFor(modelItem => item.Prices)
                                                     }
-
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="job-right my-4 flex-shrink-0">
-                                        <a href="@Url.Action("Index", "Rooms", new { hotel = @Url.Content(item?.Id.ToString())})"
-                                           class="btn d-block w-100 d-sm-inline-block btn-light">
-                                            Szukaj pokój
-                                        </a>
+
+                                        @if (!string.IsNullOrEmpty(item.Prices))
+                                        {
+                                            <a href="@Url.Action("Index", "Rooms", new { hotel = @Url.Content(item?.Id.ToString())})"
+                                                class="btn d-block w-100 d-sm-inline-block btn-light">
+                                                Pokoje
+                                            </a>
+                                        }
+                                        @if (User.IsInRole("Admin"))
+                                        {
+
+                                            <div class="container">
+                                                <div class="row">
+                                                    <a href="@Url.Action("Delete", "Hotels", new { id = @Url.Content(item?.Id.ToString())})" class="col-6 btn btn-danger">
+                                                        Usuń
+                                                    </a>
+
+                                                    <a href="@Url.Action("Edit", "Hotels", new { id = @Url.Content(item?.Id.ToString())})" class="col-6 btn btn-info">
+                                                        Edytuj
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                
                                     </div>
                                 </div>
                             }
@@ -91,69 +120,3 @@
 
 </div>
 
-
-@*<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MainImage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a href="@Url.Action("Index", "Rooms", new { hotel = @Url.Content(item?.Id.ToString())})">Rooms</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <img src="@Url.Content(item?.MainImage?.Path)" width="100" height="100"/>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@

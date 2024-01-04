@@ -279,7 +279,7 @@ namespace HotelReservation.Core.Service
                 Id = room.Id,
                 Name = room.Name,
                 Description = room.Description,
-                Image = room.MainImage.Path,
+                Image = room?.MainImage?.Path,
                 Type = room.Type.Name,
                 Price = $"{room.Price} zł",
             };

@@ -4,10 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.ConstrainedExecution;
 
 namespace HotelReservation.Core.ViewModels
 {
-    public class RoomDetailsViewModel
+    public class RoomDetailsViewModel : Room
     {
         #region Private properties
 
@@ -21,49 +23,9 @@ namespace HotelReservation.Core.ViewModels
         #region Public propertiess
 
         /// <summary>
-        /// Id of room
-        /// </summary>
-        public Guid Id => room.Id;
-
-        /// <summary>
-        /// Name of room
-        /// </summary>
-        public string Name => room.Name;
-
-        /// <summary>
-        /// Description of room
-        /// </summary>
-        public string Description => room.Description;
-
-        /// <summary>
-        /// Price fo room
-        /// </summary>
-        public double Price => room.Price;
-
-        /// <summary>
         /// Calculated price with discount
         /// </summary>
         public double DiscountPrice => room.Price * room.Discount;
-
-        /// <summary>
-        /// Max quantiny off people in room
-        /// </summary>
-        public int MaxQuantityOfPeople => room.MaxQuantityOfPeople;
-
-        /// <summary>
-        /// Id of hotel
-        /// </summary>
-        public Guid HotlelId => room.HotlelId;
-
-        /// <summary>
-        /// Room type
-        /// </summary>
-        public string Type => room?.Type?.Name;
-
-        /// <summary>
-        /// Room type id
-        /// </summary>
-        public Guid TypeId => room.TypeId;
 
         /// <summary>
         /// List of path room image
@@ -81,6 +43,28 @@ namespace HotelReservation.Core.ViewModels
         public RoomDetailsViewModel(Room room)
         {
             this.room = room;
+            // Pobierz informacje o właściwościach obiektów
+            PropertyInfo[] wlasciwosciZrodlo = room.GetType().GetProperties();
+            PropertyInfo[] wlasciwosciCel = GetType().GetProperties();
+
+            // Przejdź przez wszystkie właściwości obiektu źródłowego
+            foreach (var wlasciwoscZrodlo in wlasciwosciZrodlo)
+            {
+                // Znajdź odpowiadającą właściwość w obiekcie docelowym
+                var wlasciwoscCel = Array.Find(wlasciwosciCel, p => p.Name == wlasciwoscZrodlo.Name);
+
+                // Jeżeli istnieje właściwość o takiej samej nazwie, skopiuj wartość
+                if (wlasciwoscCel != null && wlasciwoscCel.PropertyType == wlasciwoscZrodlo.PropertyType)
+                {
+                    if (wlasciwoscCel.GetSetMethod() != null)
+                    {
+                        var wartosc = wlasciwoscZrodlo.GetValue(room);
+                        wlasciwoscCel.SetValue(this, wartosc);
+
+                    }
+                    
+                }
+            }
         }
 
         #endregion

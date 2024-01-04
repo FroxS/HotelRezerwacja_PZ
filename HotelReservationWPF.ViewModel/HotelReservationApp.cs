@@ -49,9 +49,8 @@ namespace HotelReservationWPF.ViewModel
             _service = service;
             MainWindow = _service.GetService<IMainWindow>();
             WorkingHotel = Properties.Settings.Default.WorkingHotel;
-            UserType = EUserType.Admin;
+            UserType = EUserType.Employee;
         }
-
 
         #endregion
 

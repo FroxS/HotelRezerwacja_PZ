@@ -1,9 +1,16 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInMenager
+@inject UserManager<IdentityUser> UserMenager
+@{
+    ViewData["Title"] = "Rezerwacja hoteli";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rezerwacja hoteli</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/main.css" />
@@ -32,12 +39,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Rooms" asp-action="Index">Pokoje</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Users" asp-action="Index">Użytkownicy</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Reservations" asp-action="Index">Rezerwacje</a>
+                            </li>
+                        }
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <main role="main" class="row pb-3">
             @RenderBody()
         </main>

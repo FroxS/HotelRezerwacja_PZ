@@ -1,0 +1,74 @@
+﻿@model HotelReservation.Models.Reservation
+
+@{
+    ViewData["Title"] = "Szczegóły";
+}
+<div class="container mt-5">
+    <h1>Szczegóły</h1>
+
+    <div>
+        <h4>Rezerwacja</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Numer)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Numer)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Start_Date)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Start_Date)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.End_Date)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.End_Date)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Total_Price)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Total_Price)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CountOfAdults)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CountOfAdults)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CountOfRoom)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CountOfRoom)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CountOfChildren)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CountOfChildren)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Details)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Details)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Discount)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Discount)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edytuj</a> |
+        <a asp-action="Index">Wróć</a>
+    </div>
+</div>
+

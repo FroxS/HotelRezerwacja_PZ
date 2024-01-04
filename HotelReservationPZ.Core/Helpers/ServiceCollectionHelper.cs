@@ -16,12 +16,15 @@ namespace HotelReservation.Core.Helpers
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IHotelCategoryService, HotelCategoryService>();
             services.AddScoped<IRoomTypeService, RoomTypeService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public static void ConfigureDatabase(this IServiceCollection services)
         {
             services.AddDbContext<HotelDBContext>(
                     options => options.UseSqlServer("Server=.; Database=hotelreservation; Trusted_Connection=True"));
+
+
         }
 
         public static void ConfigureRepository(this IServiceCollection services)
@@ -32,6 +35,7 @@ namespace HotelReservation.Core.Helpers
             services.AddScoped<IReservationRepository, ReservationRepository>();
             services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
             services.AddScoped<IGuestRepository, GuestRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
 
         }
     }
